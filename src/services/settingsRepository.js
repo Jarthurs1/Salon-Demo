@@ -196,18 +196,25 @@ async function persistSettings(envelope, { quiet = false } = {}) {
  * Ensure remote empty settings get a one-time default write.
  * Does not overwrite existing remote settings.
  */
+function demoSalonSchedule(existingSchedule = {}) {
+  return {
+    ...existingSchedule,
+    salonName: 'Lumen & Co.',
+    stylistName: String(existingSchedule.stylistName || '').trim() || 'Mara',
+    contactEmail: String(existingSchedule.contactEmail || '').trim() || 'studio@example.com',
+    contactPhone: String(existingSchedule.contactPhone || '').trim() || '555-014-2200',
+  }
+}
+
 export async function ensureSettingsInitialized(existingEnvelope) {
-  if (existingEnvelope) {
+  const currentName = String(existingEnvelope?.schedule?.salonName || '').trim()
+  if (existingEnvelope && currentName) {
     return hydrateSettings(existingEnvelope)
   }
 
   const defaults = normalizeSettingsEnvelope({
-    schedule: {
-      salonName: 'Lumen & Co.',
-      stylistName: 'Mara',
-      contactEmail: 'studio@example.com',
-      contactPhone: '555-014-2200',
-    },
+    ...(existingEnvelope || {}),
+    schedule: demoSalonSchedule(existingEnvelope?.schedule),
   })
   hydrateSettings(defaults)
   await persistSettings(defaults, { quiet: true })

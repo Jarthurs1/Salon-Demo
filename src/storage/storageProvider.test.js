@@ -24,6 +24,7 @@ import {
   hydrateSettings,
   getScheduleSettings,
   resetSettingsCache,
+  ensureSettingsInitialized,
 } from '../services/settingsRepository.js'
 
 describe('resolveStorageMode', () => {
@@ -77,5 +78,16 @@ describe('repositories with memory storage', () => {
 
     expect(getScheduleSettings().weeklyHours.monday.closed).toBe(false)
     expect(getScheduleSettings().weeklyHours.saturday.closed).toBe(true)
+  })
+
+  it('fills a blank settings record with the fictional salon', async () => {
+    const envelope = await ensureSettingsInitialized({
+      schedule: { salonName: '', weeklyHours: { monday: { closed: true, start: '09:00', end: '15:00' } } },
+    })
+    expect(envelope.schedule.salonName).toBe('Lumen & Co.')
+    expect(envelope.schedule.stylistName).toBe('Mara')
+    expect(envelope.schedule.contactEmail).toBe('studio@example.com')
+    expect(getScheduleSettings().salonName).toBe('Lumen & Co.')
+    expect(getScheduleSettings().weeklyHours.monday.closed).toBe(true)
   })
 })

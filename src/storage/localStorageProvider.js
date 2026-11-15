@@ -50,7 +50,13 @@ function defaultSettingsEnvelope() {
   return {
     version: DATA_VERSION,
     updatedAt: nowIso(),
-    schedule: structuredClone(DEFAULT_SCHEDULE),
+    schedule: {
+      ...structuredClone(DEFAULT_SCHEDULE),
+      salonName: 'Lumen & Co.',
+      stylistName: 'Mara',
+      contactEmail: 'studio@example.com',
+      contactPhone: '555-014-2200',
+    },
     blackoutDates: [],
   }
 }
