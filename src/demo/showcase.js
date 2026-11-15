@@ -32,11 +32,11 @@ export function decorateShowcaseAppointments(appointments) {
       return {
         ...appointment,
         payment: {
-          status: 'paid',
+          status: 'requested',
           amountCents: 6500,
-          tipCents: 1000,
+          tipCents: 0,
           requestedAt: '2026-11-01T14:00:00.000Z',
-          paidAt: '2026-11-01T15:00:00.000Z',
+          paidAt: null,
           brand: 'Visa',
           last4: '4242',
         },

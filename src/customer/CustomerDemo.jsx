@@ -22,13 +22,26 @@ import {
   confirmDemoAppointment,
   requestDemoReschedule,
 } from '../demo/customerFlow.js'
-import { approveDemoPayment } from '../demo/payments.js'
+import { approveDemoPayment, tipCentsFor } from '../demo/payments.js'
 import { money } from '../demo/showcase.js'
 import { takeCustomerFocus } from '../demo/focus.js'
 import './theme.css'
 import './BookingPage.css'
 
-const TIPS = [0, 10, 15, 20]
+const TIP_CHOICES = [
+  { id: '0', label: 'No tip' },
+  { id: '15', label: '15%' },
+  { id: '20', label: '20%' },
+  { id: '25', label: '25%' },
+  { id: 'custom', label: 'Custom tip' },
+]
+
+function sanitizeTipInput(value) {
+  const cleaned = String(value).replace(/[^\d.]/g, '')
+  const [whole, ...rest] = cleaned.split('.')
+  if (!rest.length) return whole.slice(0, 4)
+  return `${whole.slice(0, 4)}.${rest.join('').slice(0, 2)}`
+}
 
 export default function CustomerDemo() {
   const clients = useClients()
@@ -40,7 +53,8 @@ export default function CustomerDemo() {
   const [service, setService] = useState(SERVICE_OPTIONS[0])
   const [dateKey, setDateKey] = useState('')
   const [startTime, setStartTime] = useState('')
-  const [tipPercent, setTipPercent] = useState(15)
+  const [tipChoice, setTipChoice] = useState('15')
+  const [customTip, setCustomTip] = useState('')
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
   const today = useMemo(() => startOfDay(new Date()), [])
@@ -89,7 +103,7 @@ export default function CustomerDemo() {
   }
 
   const tipCents = selected?.payment
-    ? Math.round((selected.payment.amountCents || 0) * (tipPercent / 100))
+    ? tipCentsFor(selected.payment.amountCents, tipChoice, customTip)
     : 0
 
   return (
@@ -269,18 +283,36 @@ export default function CustomerDemo() {
               </button>
             </>
           ) : null}
+          {selected?.payment?.status === 'paid' && mode === 'pay' ? (
+            <>
+              <h2>Payment complete</h2>
+              <p>{`${selected.service} is paid. Total ${money((selected.payment.amountCents || 0) + (selected.payment.tipCents || 0))}.`}</p>
+            </>
+          ) : null}
           {selected?.payment?.status === 'requested' && mode === 'pay' ? (
             <>
               <h2>Approve payment</h2>
               <p>{selected.service} · {money(selected.payment.amountCents)}</p>
               <p>{client?.savedCard ? `Fictional card ${client.savedCard.brand} ···· ${client.savedCard.last4}` : 'No card on file. Approval is simulated and does not collect card details.'}</p>
               <div className="tip-row">
-                {TIPS.map((percent) => (
-                  <button key={percent} type="button" className={percent === tipPercent ? 'is-selected' : ''} onClick={() => setTipPercent(percent)}>
-                    {percent === 0 ? 'No tip' : `${percent}%`}
+                {TIP_CHOICES.map((choice) => (
+                  <button key={choice.id} type="button" className={choice.id === tipChoice ? 'is-selected' : ''} onClick={() => setTipChoice(choice.id)}>
+                    {choice.label}
                   </button>
                 ))}
               </div>
+              {tipChoice === 'custom' ? (
+                <label className="tip-custom">
+                  Custom tip
+                  <input
+                    inputMode="decimal"
+                    value={customTip}
+                    placeholder="0.00"
+                    aria-label="Custom tip amount"
+                    onChange={(event) => setCustomTip(sanitizeTipInput(event.target.value))}
+                  />
+                </label>
+              ) : null}
               <p>Total {money(selected.payment.amountCents + tipCents)}</p>
               <button
                 type="button"

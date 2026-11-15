@@ -20,6 +20,16 @@ export async function requestDemoPayment(id, amountCents) {
   return saved
 }
 
+export function tipCentsFor(amountCents, choice, customDollars) {
+  if (choice === 'custom') {
+    const dollars = Number(customDollars)
+    if (!Number.isFinite(dollars) || dollars < 0) return 0
+    return Math.min(Math.round(dollars * 100), 50000)
+  }
+  const percent = Number(choice) || 0
+  return Math.round((Number(amountCents) || 0) * (percent / 100))
+}
+
 export async function approveDemoPayment(id, tipCents) {
   const current = getAppointmentById(id)
   const payment = {

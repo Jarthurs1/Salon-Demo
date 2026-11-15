@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AuthProvider, useAuth } from './auth/AuthContext.jsx'
 import BottomNavigation from './components/BottomNavigation.jsx'
 import CalendarView from './components/CalendarView.jsx'
@@ -12,6 +12,7 @@ import { getAdjacentTab } from './utils/swipeNav.js'
 import CustomerDemo from './customer/CustomerDemo.jsx'
 import DemoChrome from './demo/DemoChrome.jsx'
 import DemoInbox from './demo/DemoInbox.jsx'
+import { takeStylistFocus } from './demo/focus.js'
 import './App.css'
 import './demo/demo.css'
 
@@ -23,6 +24,7 @@ function AppShell({ onRefresh, storageMode }) {
     completeHelpGuide,
   } = useAuth()
   const [activeTab, setActiveTab] = useState('calendar')
+  const [clientFocusId, setClientFocusId] = useState('')
   const [calendarFocusDate, setCalendarFocusDate] = useState(null)
   const [bookPrefill, setBookPrefill] = useState(null)
   const [bookSession, setBookSession] = useState(0)
@@ -35,6 +37,14 @@ function AppShell({ onRefresh, storageMode }) {
     status === 'authenticated' &&
     isStylist &&
     !hasCompletedHelpGuide
+
+  useEffect(() => {
+    const focus = takeStylistFocus()
+    if (!focus) return
+    setActiveTab(focus.tab === 'clients' ? 'clients' : 'calendar')
+    if (focus.dateKey) setCalendarFocusDate(focus.dateKey)
+    if (focus.clientId) setClientFocusId(focus.clientId)
+  }, [])
 
   function handleTabChange(tab) {
     if (needsMandatoryGuide) return
@@ -137,6 +147,7 @@ function AppShell({ onRefresh, storageMode }) {
             aria-hidden={activeTab !== 'clients'}
           >
             <ClientsView
+              focusClientId={clientFocusId}
               onBookClient={handleBookClient}
               onRefresh={onRefresh}
               onOpenHelp={needsMandatoryGuide ? null : openHelp}

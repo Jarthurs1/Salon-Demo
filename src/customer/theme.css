@@ -85,3 +85,17 @@
   background: var(--espresso);
   color: #fff;
 }
+
+.customer-demo .tip-custom {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+}
+
+.customer-demo .tip-custom input {
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}

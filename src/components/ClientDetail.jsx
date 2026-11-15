@@ -149,6 +149,19 @@ export default function ClientDetail({
             )}
           </dd>
         </div>
+        <div>
+          <dt>Payment method</dt>
+          <dd>
+            {client.savedCard ? (
+              <>
+                {client.savedCard.brand} ···· {client.savedCard.last4}
+                <span className="client-detail__muted"> Fictional demo card. The card number is not stored.</span>
+              </>
+            ) : (
+              <span className="client-detail__muted">No card on file</span>
+            )}
+          </dd>
+        </div>
         {client.notes ? (
           <div>
             <dt>Notes</dt>

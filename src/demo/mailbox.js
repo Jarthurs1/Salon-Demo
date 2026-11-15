@@ -1,3 +1,6 @@
+import { formatTimeDisplay } from '../utils/dateUtils.js'
+import { formatVisit } from './formatVisit.js'
+
 const KEY = 'salon-demo.inbox.v1'
 const listeners = new Set()
 let snapshot = []
@@ -67,7 +70,8 @@ export function addMessage(message, storage) {
 
 export function recordDemoMail(kind, appointment, extra = {}, storage) {
   const name = appointment?.clientName || extra.clientName || 'there'
-  const when = [appointment?.date, appointment?.startTime].filter(Boolean).join(' at ')
+  const when = formatVisit(appointment?.date, appointment?.startTime)
+  const requestedWhen = formatVisit(extra.requestedDate, extra.requestedTime)
   const service = appointment?.service || 'Appointment'
   const salon = extra.salonName || 'Lumen & Co.'
   const templates = {
@@ -96,7 +100,7 @@ export function recordDemoMail(kind, appointment, extra = {}, storage) {
       kind,
       to: 'Mara',
       subject: `Reschedule requested — ${name}`,
-      body: `${name} asked to move ${service} from ${when} to ${extra.requestedDate || ''} at ${extra.requestedTime || ''}. The original time stays reserved.`,
+      body: `${name} asked to move ${service} from ${when} to ${requestedWhen}. The original time stays reserved.`,
       actions: [{ id: 'review', label: 'Review in calendar', appointmentId: appointment?.id }],
     },
     rescheduleApproved: {
@@ -159,7 +163,7 @@ export function ensureSeedMailbox(appointments, storage) {
   const names = (appointments || [])
     .filter((item) => item.type !== 'blocked' && item.status !== 'canceled')
     .slice(0, 4)
-    .map((item) => `${item.startTime} ${item.clientName || item.service}`)
+    .map((item) => `${formatTimeDisplay(item.startTime)} ${item.clientName || item.service}`)
   recordDemoMail(
     'dailySummary',
     null,

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Camera, Plus, Search } from 'lucide-react'
 import ClientCard from './ClientCard.jsx'
 import ClientForm from './ClientForm.jsx'
@@ -11,6 +11,7 @@ import { searchClients } from '../services/clientRepository.js'
 import './ClientsView.css'
 
 export default function ClientsView({
+  focusClientId = '',
   onBookClient,
   onRefresh = null,
   onOpenHelp = null,
@@ -19,6 +20,11 @@ export default function ClientsView({
   const clients = useClients()
   const [query, setQuery] = useState('')
   const [screen, setScreen] = useState({ type: 'list' })
+
+  useEffect(() => {
+    if (!focusClientId) return
+    setScreen({ type: 'detail', clientId: focusClientId })
+  }, [focusClientId])
   const [showPhotoImport, setShowPhotoImport] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
 
