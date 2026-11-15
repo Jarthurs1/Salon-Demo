@@ -1,0 +1,188 @@
+.book-date-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.65rem 0.7rem 0.75rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(40, 30, 28, 0.05);
+  touch-action: pan-y;
+}
+
+.book-date-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.book-date-calendar__month {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: #2c2422;
+  letter-spacing: -0.01em;
+}
+
+.book-date-calendar__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: #f7f2f0;
+  color: #a83d4c;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.book-date-calendar__arrow:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.book-date-calendar__arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  color: #9a8e8b;
+}
+
+.book-date-calendar__weekdays,
+.book-date-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.2rem;
+}
+
+.book-date-calendar__weekday {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9a8e8b;
+  padding: 0.15rem 0;
+}
+
+.book-date-calendar__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.08rem;
+  aspect-ratio: 1;
+  min-height: 2.35rem;
+  padding: 0.2rem 0.1rem 0.15rem;
+  border: none;
+  border-radius: 0.7rem;
+  background: transparent;
+  color: #2c2422;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.book-date-calendar__day:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.book-date-calendar__day-number {
+  line-height: 1;
+}
+
+.book-date-calendar__closed {
+  font-size: 0.42rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0.72;
+}
+
+.book-date-calendar__dot {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.book-date-calendar__dot.is-empty {
+  background: transparent;
+}
+
+.book-date-calendar__dot--pending {
+  background: #c94a55;
+}
+
+.book-date-calendar__dot--confirmed {
+  background: #3da86a;
+}
+
+.book-date-calendar__dot--reschedule_requested {
+  background: #e08a2e;
+}
+
+.book-date-calendar__dot--blocked {
+  background: #a8a4a2;
+}
+
+.book-date-calendar__day.is-outside {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.book-date-calendar__day.is-unavailable:not(.is-outside) {
+  color: #b5aaa6;
+  background: #f3efed;
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+/* Closed but still bookable — visual cue only. */
+.book-date-calendar__day.is-closed:not(.is-selected):not(.is-unavailable) {
+  background: #f3efed;
+  color: #8a7e7a;
+}
+
+.book-date-calendar__day.is-selected:not(:disabled) {
+  background: #a83d4c;
+  color: #fff;
+  opacity: 1;
+}
+
+.book-date-calendar__day.is-selected .book-date-calendar__closed {
+  opacity: 0.9;
+}
+
+.book-date-calendar__day.is-selected .book-date-calendar__dot--pending {
+  background: #ffd4d8;
+}
+
+.book-date-calendar__day.is-selected .book-date-calendar__dot--confirmed {
+  background: #c8f0d6;
+}
+
+.book-date-calendar__day.is-selected .book-date-calendar__dot--reschedule_requested {
+  background: #ffd7a8;
+}
+
+.book-date-calendar__day.is-selected .book-date-calendar__dot--blocked {
+  background: #e8e4e2;
+}
+
+.book-date-calendar__day:not(.is-unavailable):not(.is-selected):not(.is-outside):hover {
+  background: rgba(168, 61, 76, 0.1);
+}
+
+.book-date-calendar__day.is-closed:not(.is-unavailable):not(.is-selected):not(.is-outside):hover {
+  background: #ebe4e0;
+}

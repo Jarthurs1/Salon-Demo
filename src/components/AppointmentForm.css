@@ -1,0 +1,234 @@
+.appointment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.appointment-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.appointment-form__label {
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #8a7e7a;
+}
+
+.appointment-form__input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 3rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(40, 30, 28, 0.1);
+  border-radius: 0.9rem;
+  background: #fff;
+  color: #2c2422;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.appointment-form__textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.appointment-form__hint {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #8a7e7a;
+}
+
+.appointment-form__selected-client {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  border: 1px solid rgba(40, 30, 28, 0.08);
+}
+
+.appointment-form__selected-client strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.appointment-form__selected-client span {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: #8a7e7a;
+}
+
+.appointment-form__client-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 11rem;
+  overflow-y: auto;
+  border-radius: 0.9rem;
+  background: #fff;
+  border: 1px solid rgba(40, 30, 28, 0.08);
+}
+
+.appointment-form__client-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-bottom: 1px solid rgba(40, 30, 28, 0.05);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.appointment-form__client-option:last-child {
+  border-bottom: none;
+}
+
+.appointment-form__client-option strong {
+  font-size: 0.92rem;
+  color: #2c2422;
+}
+
+.appointment-form__client-option span {
+  font-size: 0.78rem;
+  color: #8a7e7a;
+}
+
+.appointment-form__add-client {
+  margin-top: 0.45rem;
+  border: none;
+  background: transparent;
+  color: #2a7a6e;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+  cursor: pointer;
+  text-align: left;
+  padding: 0.35rem 0;
+}
+
+.appointment-form__status-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.appointment-form__hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: #8a4f12;
+}
+
+.status-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  border: 1.5px solid rgba(40, 30, 28, 0.1);
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: #6b5f5c;
+  cursor: pointer;
+}
+
+.status-chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.status-chip.is-pending.is-active {
+  background: #fce8e9;
+  border-color: #c94a55;
+  color: #b33a45;
+}
+
+.status-chip.is-confirmed.is-active {
+  background: #e4f5ea;
+  border-color: #3da86a;
+  color: #1f7a45;
+}
+
+.status-chip.is-reschedule.is-active {
+  background: #fff0df;
+  border-color: #e08a2e;
+  color: #a85a12;
+}
+
+.appointment-form__error {
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: #fce8e9;
+  color: #a83d4c;
+}
+
+.appointment-form__error p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.appointment-form__error-detail {
+  margin-top: 0.35rem !important;
+  font-weight: 500 !important;
+  opacity: 0.9;
+}
+
+.form-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 0.95rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.form-btn--primary {
+  background: #a83d4c;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(168, 61, 76, 0.25);
+}
+
+.form-btn--ghost {
+  background: transparent;
+  color: #6b5f5c;
+}
+
+.form-btn--tiny {
+  width: auto;
+  min-height: 2.2rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  background: #efeae7;
+  color: #5c524f;
+  flex-shrink: 0;
+}
+
+.form-btn--danger {
+  background: #c94a55;
+  color: #fff;
+}

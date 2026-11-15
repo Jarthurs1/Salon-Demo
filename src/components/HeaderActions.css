@@ -1,0 +1,75 @@
+.header-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.header-actions__help,
+.header-actions__refresh,
+.header-actions__settings,
+.header-actions__signout {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #5c5654;
+  box-shadow: 0 0 0 1px rgba(40, 30, 28, 0.08);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.header-actions__signout {
+  width: auto;
+  padding: 0 0.85rem;
+  color: #2c2422;
+}
+
+.header-actions__refresh:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.header-actions__help:active,
+.header-actions__settings:active,
+.header-actions__refresh:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.header-actions__icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+.header-actions__icon.is-spinning {
+  animation: header-refresh-spin 0.85s linear infinite;
+}
+
+@keyframes header-refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-actions__icon.is-spinning {
+    animation: none;
+    opacity: 0.7;
+  }
+}

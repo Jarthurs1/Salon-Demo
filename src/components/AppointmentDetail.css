@@ -1,0 +1,145 @@
+.appointment-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.appointment-detail__date {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #8a7e7a;
+}
+
+.appointment-detail__time {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #2c2422;
+}
+
+.appointment-detail__badge {
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.appointment-detail__badge--confirmed {
+  background: #e4f5ea;
+  color: #1f7a45;
+}
+
+.appointment-detail__badge--pending {
+  background: #fce8e9;
+  color: #b33a45;
+}
+
+.appointment-detail__badge--reschedule_requested {
+  background: #fff0df;
+  color: #a85a12;
+}
+
+.appointment-detail__badge--canceled,
+.appointment-detail__badge--cancelled {
+  background: #d62839;
+  color: #fff;
+}
+
+.appointment-detail__reschedule-hint {
+  margin: 0.65rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.85rem;
+  background: #fff6ea;
+  color: #8a4f12;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.appointment-detail__canceled-hint {
+  margin: 0.65rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.85rem;
+  background: #fce8e9;
+  color: #8a2f3a;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.appointment-detail__badge--blocked {
+  background: #eceaea;
+  color: #6a6563;
+}
+
+.appointment-detail__email-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: #8a5a3a;
+  line-height: 1.35;
+}
+
+.appointment-detail__meta {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.appointment-detail__meta div {
+  padding: 0.85rem 1rem;
+  border-radius: 0.95rem;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(40, 30, 28, 0.04);
+}
+
+.appointment-detail__meta dt {
+  margin: 0 0 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #8a7e7a;
+}
+
+.appointment-detail__meta dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c2422;
+  word-break: break-word;
+}
+
+.appointment-detail__confirm-text {
+  margin: 0 0 0.25rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: #2c2422;
+}
+
+.appointment-detail__contact {
+  margin-top: 0.25rem;
+}
+
+.appointment-detail__message {
+  background: #fff;
+  color: #2a7a6e;
+  border: 1.5px solid rgba(42, 122, 110, 0.35);
+  box-shadow: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.appointment-detail__message:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.appointment-detail__message:active:not(:disabled) {
+  transform: scale(0.99);
+}

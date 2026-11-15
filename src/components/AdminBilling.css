@@ -1,0 +1,180 @@
+.admin-billing {
+  margin-top: 0.25rem;
+}
+
+.admin-billing__intro {
+  margin-bottom: 0.9rem;
+}
+
+.admin-billing__heading {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #2c2422;
+}
+
+.admin-billing__copy {
+  margin: 0.35rem 0 0;
+  color: #6b5f5c;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.admin-billing__warn,
+.admin-billing__message,
+.admin-billing__error {
+  margin: 0 0 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.8rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.admin-billing__warn {
+  background: rgba(168, 120, 40, 0.12);
+  color: #8a5a20;
+}
+
+.admin-billing__message {
+  background: rgba(46, 125, 90, 0.12);
+  color: #2f6b4f;
+}
+
+.admin-billing__error {
+  background: rgba(168, 61, 76, 0.1);
+  color: #8a3038;
+}
+
+.admin-billing__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-billing__card {
+  padding: 0.95rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(40, 30, 28, 0.05);
+}
+
+.admin-billing__card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.admin-billing__name {
+  margin: 0;
+  font-weight: 700;
+  color: #2c2422;
+}
+
+.admin-billing__email {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  color: #8a7e7a;
+}
+
+.admin-billing__status {
+  flex-shrink: 0;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: #efeae7;
+  color: #5c524f;
+}
+
+.admin-billing__status--active,
+.admin-billing__status--trialing {
+  background: rgba(46, 125, 90, 0.14);
+  color: #2f6b4f;
+}
+
+.admin-billing__status--past_due,
+.admin-billing__status--checkout_pending {
+  background: rgba(168, 120, 40, 0.14);
+  color: #8a5a20;
+}
+
+.admin-billing__status--canceled {
+  background: rgba(168, 61, 76, 0.12);
+  color: #8a3038;
+}
+
+.admin-billing__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 0.75rem;
+  margin: 0.85rem 0 0;
+}
+
+.admin-billing__meta div {
+  min-width: 0;
+}
+
+.admin-billing__meta dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #8a7e7a;
+}
+
+.admin-billing__meta dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c2422;
+}
+
+.admin-billing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+}
+
+.admin-billing__btn {
+  appearance: none;
+  border: none;
+  border-radius: 0.8rem;
+  min-height: 2.45rem;
+  padding: 0.45rem 0.8rem;
+  background: #efeae7;
+  color: #5c524f;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.admin-billing__btn--primary {
+  background: #a83d4c;
+  color: #fff;
+}
+
+.admin-billing__btn--ghost {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(40, 30, 28, 0.12);
+}
+
+.admin-billing__btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.admin-billing__empty {
+  margin: 0.35rem 0 0;
+  color: #8a7e7a;
+  font-size: 0.9rem;
+}

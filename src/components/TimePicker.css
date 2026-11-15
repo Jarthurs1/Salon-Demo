@@ -1,0 +1,34 @@
+/* Match Book / form select fields: full-width, compact when closed. */
+.time-picker-input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 2.85rem;
+  border: 1px solid #e6dfdb;
+  border-radius: 0.9rem;
+  padding: 0.85rem 0.95rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25;
+  background: #fff;
+  color: #2c2422;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.time-picker-input:disabled {
+  opacity: 0.55;
+}
+
+.time-picker-input:focus {
+  outline: none;
+  border-color: rgba(42, 122, 110, 0.55);
+  box-shadow: 0 0 0 2px rgba(42, 122, 110, 0.12);
+}
+
+/* iOS Safari: keep the control full-width and tappable without overflow. */
+.time-picker-input::-webkit-date-and-time-value {
+  text-align: left;
+}

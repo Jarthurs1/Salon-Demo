@@ -1,0 +1,148 @@
+.day-selector {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  margin: 0 -0.15rem 0.85rem;
+  padding: 0.15rem 0.15rem 0.45rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.day-selector::-webkit-scrollbar {
+  display: none;
+}
+
+.day-selector__day {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  min-width: 3.35rem;
+  min-height: 4rem;
+  padding: 0.4rem 0.45rem 0.35rem;
+  border: none;
+  border-radius: 0.95rem;
+  background: #fff;
+  color: #5c524f;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(40, 30, 28, 0.04);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.day-selector__day:active {
+  transform: scale(0.96);
+}
+
+.day-selector__label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.day-selector__number {
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.day-selector__closed {
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.day-selector__dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  margin-top: 0.05rem;
+  flex-shrink: 0;
+}
+
+/* Closed day with appointments: keep CLOSED + status dot compact. */
+.day-selector__day.is-closed {
+  min-height: 4.15rem;
+  padding-bottom: 0.3rem;
+}
+
+.day-selector__dot.is-empty {
+  background: transparent;
+}
+
+.day-selector__dot--pending {
+  background: #c94a55;
+}
+
+.day-selector__dot--confirmed {
+  background: #3da86a;
+}
+
+.day-selector__dot--reschedule_requested {
+  background: #e08a2e;
+}
+
+.day-selector__dot--blocked {
+  background: #a8a4a2;
+}
+
+.day-selector__day.is-today:not(.is-selected) {
+  box-shadow: inset 0 0 0 1.5px rgba(168, 61, 76, 0.35);
+}
+
+.day-selector__day.is-past {
+  opacity: 0.42;
+  background: #f3efed;
+  box-shadow: none;
+}
+
+.day-selector__day.is-closed:not(.is-selected):not(.is-past) {
+  background: #f3efed;
+  color: #8a7e7a;
+}
+
+.day-selector__day.is-selected {
+  background: #a83d4c;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(168, 61, 76, 0.28);
+  opacity: 1;
+}
+
+.day-selector__day.is-selected .day-selector__label,
+.day-selector__day.is-selected .day-selector__closed {
+  opacity: 0.9;
+}
+
+.day-selector__day.is-selected .day-selector__dot--pending {
+  background: #ffd4d8;
+}
+
+.day-selector__day.is-selected .day-selector__dot--confirmed {
+  background: #c8f0d6;
+}
+
+.day-selector__day.is-selected .day-selector__dot--reschedule_requested {
+  background: #ffd7a8;
+}
+
+.day-selector__day.is-selected .day-selector__dot--blocked {
+  background: #e8e4e2;
+}

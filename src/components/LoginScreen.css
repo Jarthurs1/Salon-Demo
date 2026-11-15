@@ -1,0 +1,171 @@
+.login-screen {
+  position: relative;
+  min-height: 100%;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    calc(1.25rem + env(safe-area-inset-top, 0px))
+    1.1rem
+    calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.login-screen__backdrop {
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(40, 24, 28, 0.52), rgba(40, 24, 28, 0.72)),
+    url('/login-salon-bg.jpg') center / cover no-repeat;
+  filter: saturate(0.95);
+  z-index: 0;
+}
+
+.login-screen__card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem 1.25rem 1.35rem;
+  border-radius: 1.35rem;
+  background: rgba(250, 247, 245, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 18px 40px rgba(28, 18, 20, 0.28);
+}
+
+.login-screen__brand {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.login-screen__title {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #2c2422;
+  line-height: 1.2;
+}
+
+.login-screen__subtitle {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #8a7e7a;
+  line-height: 1.4;
+}
+
+.login-screen__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.login-screen__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.login-screen__label {
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #8a7e7a;
+}
+
+.login-screen__input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e6dfdb;
+  border-radius: 0.9rem;
+  padding: 0.85rem 0.95rem;
+  font: inherit;
+  font-size: 1rem;
+  background: #fff;
+  color: #2c2422;
+}
+
+.login-screen__password-row {
+  position: relative;
+}
+
+.login-screen__input--password {
+  padding-right: 3rem;
+}
+
+.login-screen__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #6b5f5c;
+  cursor: pointer;
+}
+
+.login-screen__error {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.8rem;
+  background: rgba(168, 61, 76, 0.1);
+  color: #8a3038;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.login-screen__submit {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 0.25rem;
+  border: none;
+  border-radius: 0.95rem;
+  background: #a83d4c;
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 650;
+  box-shadow: 0 3px 10px rgba(168, 61, 76, 0.25);
+  cursor: pointer;
+}
+
+.login-screen__submit:disabled {
+  opacity: 0.8;
+  cursor: default;
+}
+
+.login-screen__spinner {
+  animation: login-spin 0.85s linear infinite;
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-screen__spinner {
+    animation: none;
+  }
+}

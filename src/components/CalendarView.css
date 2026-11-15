@@ -1,0 +1,27 @@
+.calendar-view {
+  padding: 0;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+.calendar-view__requests {
+  display: inline-flex;
+  margin: 0 0 0.7rem;
+  padding: 0.45rem 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff0df;
+  color: #a85a12;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.calendar-view__selected-date {
+  margin: 0 0 0.55rem;
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: #2c2422;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}

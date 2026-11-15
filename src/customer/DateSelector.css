@@ -1,0 +1,95 @@
+.date-selector {
+  padding: 0.35rem 0.1rem 0.15rem;
+  border: 0;
+  background: transparent;
+}
+
+.date-selector__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.date-selector__month {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--espresso);
+}
+
+.date-selector__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(48, 39, 36, 0.14);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--espresso);
+  cursor: pointer;
+}
+
+.date-selector__arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.date-selector__weekdays,
+.date-selector__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+}
+
+.date-selector__weekdays span {
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.25rem 0;
+}
+
+.date-selector__day {
+  aspect-ratio: 1;
+  min-height: 2.55rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: var(--espresso);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.date-selector__day:hover:not(:disabled) {
+  background: rgba(216, 184, 164, 0.35);
+}
+
+.date-selector__day.is-outside {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.date-selector__day.is-unavailable:not(.is-outside) {
+  color: #b3a59d;
+  background: #f3ebe4;
+  cursor: not-allowed;
+}
+
+.date-selector__day.is-selected:not(:disabled) {
+  background: var(--espresso);
+  color: #fff;
+}
+
+.date-selector__chosen {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}

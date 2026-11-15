@@ -1,0 +1,102 @@
+.data-provider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.data-boot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  height: 100%;
+  min-height: 100dvh;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: #5c4f4a;
+  background: #faf7f5;
+}
+
+.data-boot p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  max-width: 16rem;
+}
+
+.data-boot__spinner {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2.5px solid rgba(168, 61, 76, 0.2);
+  border-top-color: #a83d4c;
+  animation: data-spin 0.75s linear infinite;
+}
+
+@keyframes data-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.data-boot__retry {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.35rem;
+  background: #a83d4c;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.persistence-chip {
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 6px 18px rgba(40, 30, 28, 0.12);
+  pointer-events: auto;
+}
+
+.persistence-chip--saving,
+.persistence-chip--refreshing {
+  background: rgba(255, 255, 255, 0.96);
+  color: #5c4f4a;
+}
+
+.persistence-chip--saved {
+  background: rgba(42, 122, 110, 0.95);
+  color: #fff;
+}
+
+.persistence-chip--error {
+  background: rgba(168, 61, 76, 0.96);
+  color: #fff;
+}
+
+.persistence-chip__dismiss {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.72rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}

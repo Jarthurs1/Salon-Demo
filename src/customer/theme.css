@@ -1,0 +1,87 @@
+.customer-demo {
+  --ivory: #f6f0ea;
+  --rose: #d8b8a4;
+  --terracotta: #9a6b63;
+  --espresso: #302724;
+  --ink: #3a312d;
+  --muted: #6f615b;
+  --line: rgba(48, 39, 36, 0.14);
+  --blush: #9a6b63;
+  --blush-soft: rgba(154, 107, 99, 0.12);
+  --blush-deep: #7d564f;
+  --white: #ffffff;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --ease: 180ms ease;
+  min-height: 100%;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.customer-demo .btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.15rem;
+  padding: 0.85rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--espresso);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.customer-demo .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.customer-demo .btn--ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--espresso);
+}
+
+.customer-demo .customer-choices,
+.customer-demo .customer-appointments {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.customer-demo .customer-choice,
+.customer-demo .customer-appointment {
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: #fff;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+}
+
+.customer-demo .customer-choice small,
+.customer-demo .customer-appointment span {
+  display: block;
+  color: var(--muted);
+}
+
+.customer-demo .tip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.customer-demo .tip-row button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+.customer-demo .tip-row button.is-selected {
+  background: var(--espresso);
+  color: #fff;
+}
