@@ -14,6 +14,7 @@ import CardSetup from './demo/CardSetup.jsx'
 import DemoChrome from './demo/DemoChrome.jsx'
 import DemoInbox from './demo/DemoInbox.jsx'
 import DemoIntro from './demo/DemoIntro.jsx'
+import SmsPreview from './demo/SmsPreview.jsx'
 import { takeStylistFocus } from './demo/focus.js'
 import './App.css'
 import './demo/demo.css'
@@ -216,6 +217,7 @@ function DemoApp({ onRefresh, storageMode }) {
         {view === 'inbox' ? (
           <DemoInbox onOpenCustomer={() => setView('customer')} onOpenStylist={() => setView('stylist')} />
         ) : null}
+        {view === 'sms' ? <SmsPreview /> : null}
       </div>
     </div>
   )

@@ -8,6 +8,7 @@ const VIEWS = [
   ['customer', 'Customer Booking'],
   ['cards', 'Card Setup'],
   ['inbox', 'Emails & Payments'],
+  ['sms', 'SMS Preview'],
 ]
 
 export default function DemoChrome({ view, onView }) {

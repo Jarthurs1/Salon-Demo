@@ -4,6 +4,7 @@ import { clearMailbox, listMessages, recordDemoMail } from './mailbox.js'
 import { assertDemoRequestAllowed } from './networkGuard.js'
 import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, requestDemoPayment, tipCentsFor } from './payments.js'
 import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment } from './inboxStories.js'
+import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, statusFor } from './smsPreview.js'
 
 function memoryStorage() {
   const values = new Map()
@@ -95,6 +96,20 @@ describe('salon demo isolation', () => {
     expect(digest.reschedules.join(' ')).toContain('Amanda Brooks')
     expect(digest.cancellations.join(' ')).toContain('Jessica Coleman')
     expect(digest.bookings.join(' ')).toContain('Sarah Bennett')
+  })
+})
+
+describe('sms preview', () => {
+  it('confirms with YES and keeps a reschedule on the original time', () => {
+    expect(messagesFor('start')[0].text).toContain('Reply YES')
+    expect(messagesFor('yes-wait').map((item) => item.text)).toContain('YES')
+    expect(statusFor('yes-wait')).toBe('pending')
+    expect(messagesFor('yes-done').at(-1).text).toBe(SMS_CONFIRMED)
+    expect(statusFor('yes-done')).toBe('confirmed')
+    expect(messagesFor('reschedule').at(-1).text).toBe(SMS_RESCHEDULE_REPLY)
+    expect(statusFor('reschedule')).toBe('reschedule_requested')
+    expect(SMS_RESCHEDULE_REPLY).toMatch(/stylist approves/)
+    expect(JSON.stringify(messagesFor('reschedule'))).not.toMatch(/twilio|execute-api|sms\./i)
   })
 })
 
