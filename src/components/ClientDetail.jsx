@@ -154,7 +154,7 @@ export default function ClientDetail({
           <dd>
             {client.savedCard ? (
               <>
-                {client.savedCard.brand} ···· {client.savedCard.last4}
+                Card Ready · {client.savedCard.brand} ···· {client.savedCard.last4}
                 <span className="client-detail__muted"> Fictional demo card. The card number is not stored.</span>
               </>
             ) : (

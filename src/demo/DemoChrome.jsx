@@ -4,9 +4,10 @@ import { useAppointments } from '../hooks/useAppointments.js'
 import './demo.css'
 
 const VIEWS = [
-  ['stylist', 'Stylist'],
-  ['customer', 'Customer'],
-  ['inbox', 'Inbox'],
+  ['stylist', 'Stylist Mobile App'],
+  ['customer', 'Customer Booking'],
+  ['cards', 'Card Setup'],
+  ['inbox', 'Emails & Payments'],
 ]
 
 export default function DemoChrome({ view, onView }) {
@@ -38,6 +39,7 @@ export default function DemoChrome({ view, onView }) {
         </nav>
         <button type="button" className="demo-chrome__reset" onClick={resetDemo}>Reset Demo</button>
       </div>
+      <p className="demo-chrome__note">Explore the stylist app and the customer booking experience. Card setup and emails stay in sync with both.</p>
       <p className="demo-chrome__banner">This is an interactive demonstration using fictional data. No real appointments, emails, or payments are processed.</p>
     </header>
   )

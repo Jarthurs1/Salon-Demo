@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { requestDemoPayment } from '../demo/payments.js'
+import { completeDemoAppointment } from '../demo/payments.js'
 import { money, SERVICE_PRICES } from '../demo/showcase.js'
 
 export default function PaymentPanel({ appointment }) {
@@ -8,50 +8,58 @@ export default function PaymentPanel({ appointment }) {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const payment = appointment.payment
+  const blocked = appointment.type === 'blocked' || appointment.status === 'canceled'
+  const rescheduleOpen = appointment.status === 'reschedule_requested'
+    || appointment.rescheduleRequest?.status === 'pending'
 
-  if (appointment.type === 'blocked' || appointment.status === 'canceled') return null
+  if (blocked) return null
 
-  async function requestPayment() {
-    const amountCents = Math.round(Number(dollars) * 100)
-    if (!Number.isFinite(amountCents) || amountCents <= 0) {
-      setError('Enter the final price.')
-      return
-    }
+  async function markCompleted() {
     setBusy(true)
     setError('')
     try {
-      await requestDemoPayment(appointment.id, amountCents)
+      const result = await completeDemoAppointment(appointment.id, dollars)
+      if (!result.ok) setError(result.message)
     } catch (err) {
-      setError(err.message || 'Could not request payment.')
+      setError(err.message || 'Could not complete this appointment.')
     } finally {
       setBusy(false)
     }
   }
 
+  const canComplete = appointment.status === 'confirmed'
+    && !rescheduleOpen
+    && payment?.status !== 'paid'
+    && payment?.status !== 'requested'
+
   return (
-    <section className="appointment-detail__request" aria-label="Payment">
-      <p className="appointment-detail__reschedule-hint">Payment</p>
+    <section className="appointment-detail__payment" aria-label="Payment">
+      <h3>Payment</h3>
       {payment?.status === 'paid' ? (
         <p>
           Paid {money((payment.amountCents || 0) + (payment.tipCents || 0))}
-          {payment.tipCents ? `, including a ${money(payment.tipCents)} tip` : ''}. A simulated receipt is in the Demo Inbox.
+          {payment.tipCents ? `, including a ${money(payment.tipCents)} tip` : ''}.
         </p>
       ) : null}
       {payment?.status === 'requested' ? (
-        <p>Payment requested for {money(payment.amountCents)}. Waiting for the customer to approve it.</p>
+        <p>Awaiting Payment for {money(payment.amountCents)}. The customer can review it from Emails & Payments.</p>
       ) : null}
-      {payment?.status !== 'paid' && payment?.status !== 'requested' ? (
+      {rescheduleOpen ? (
+        <p>Resolve the reschedule request before this visit can be completed.</p>
+      ) : null}
+      {canComplete ? (
         <>
-          <label>
-            Final price
+          <label className="payment-price">
+            <span>Final price</span>
             <input
               inputMode="decimal"
               value={dollars}
+              aria-label="Final price"
               onChange={(event) => setDollars(event.target.value)}
             />
           </label>
-          <button type="button" className="form-btn form-btn--primary" disabled={busy} onClick={requestPayment}>
-            Request payment
+          <button type="button" className="form-btn form-btn--primary" disabled={busy} onClick={markCompleted}>
+            Mark Completed
           </button>
         </>
       ) : null}

@@ -291,7 +291,7 @@ export default function CustomerDemo() {
           ) : null}
           {selected?.payment?.status === 'requested' && mode === 'pay' ? (
             <>
-              <h2>Approve payment</h2>
+              <h2>Approve & Pay</h2>
               <p>{selected.service} · {money(selected.payment.amountCents)}</p>
               <p>{client?.savedCard ? `Fictional card ${client.savedCard.brand} ···· ${client.savedCard.last4}` : 'No card on file. Approval is simulated and does not collect card details.'}</p>
               <div className="tip-row">
@@ -322,7 +322,7 @@ export default function CustomerDemo() {
                   setNotice('Payment approved. The receipt is in the Demo Inbox.')
                 }, 'home')}
               >
-                Approve payment
+                Approve & Pay
               </button>
             </>
           ) : null}

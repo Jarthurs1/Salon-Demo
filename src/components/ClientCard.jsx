@@ -25,7 +25,7 @@ export default function ClientCard({ client, onSelect }) {
           {contact.text}
         </span>
         {client.savedCard ? (
-          <span className="client-card__card">{client.savedCard.brand} ···· {client.savedCard.last4}</span>
+          <span className="client-card__card">Card Ready · {client.savedCard.brand} ···· {client.savedCard.last4}</span>
         ) : null}
       </div>
     </button>

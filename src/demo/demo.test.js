@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { decorateShowcaseAppointments, decorateShowcaseClients } from './showcase.js'
 import { clearMailbox, listMessages, recordDemoMail } from './mailbox.js'
 import { assertDemoRequestAllowed } from './networkGuard.js'
-import { approveDemoPayment, requestDemoPayment, tipCentsFor } from './payments.js'
+import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, requestDemoPayment, tipCentsFor } from './payments.js'
 import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment } from './inboxStories.js'
 
 function memoryStorage() {
@@ -106,5 +106,18 @@ describe('payment helpers', () => {
     expect(tipCentsFor(6500, '25', '')).toBe(1625)
     expect(tipCentsFor(6500, 'custom', '8.50')).toBe(850)
     expect(tipCentsFor(6500, '0', '')).toBe(0)
+    expect(paymentFollowsElapsedTime()).toBe(false)
+    expect(completionBlockReason({
+      type: 'appointment',
+      status: 'confirmed',
+      date: '2020-01-01',
+      startTime: '09:00',
+    }, '65')).toBe('')
+    expect(completionBlockReason({
+      type: 'appointment',
+      status: 'reschedule_requested',
+      rescheduleRequest: { status: 'pending' },
+    }, '65')).toMatch(/reschedule/)
+    expect(completionBlockReason({ type: 'appointment', status: 'confirmed' }, '0')).toMatch(/price/)
   })
 })

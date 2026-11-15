@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { useAppointments } from '../hooks/useAppointments.js'
 import { useClients } from '../hooks/useClients.js'
 import { focusCustomerAppointment, focusStylistView } from './focus.js'
@@ -6,11 +6,11 @@ import {
   buildDayBriefing,
   buildFollowUpDigest,
   emilyPaymentCopy,
-  EMILY_CLIENT_ID,
   findEmilyPayment,
   linesOrNone,
 } from './inboxStories.js'
 import { listMessages, subscribeMailbox } from './mailbox.js'
+import { previewPaymentReminder } from './payments.js'
 import './demo.css'
 
 function Story({ eyebrow, title, trigger, audience, why, children, prominent = false }) {
@@ -58,56 +58,21 @@ function BulletList({ items }) {
   )
 }
 
-function CardSetupPreview({ onShowClient }) {
-  return (
-    <div className="card-preview-wrap">
-      <figure className="card-preview" aria-label="Illustrated payment setup preview">
-        <p className="card-preview__salon">Lumen & Co.</p>
-        <h4>Secure payment setup</h4>
-        <p className="card-preview__label">Demo Preview — No Real Card Information Collected</p>
-        <div className="card-preview__field">
-          <span>Card number</span>
-          <strong>•••• •••• •••• ••••</strong>
-        </div>
-        <div className="card-preview__row">
-          <div className="card-preview__field">
-            <span>Expiration</span>
-            <strong>MM / YY</strong>
-          </div>
-          <div className="card-preview__field">
-            <span>Security code</span>
-            <strong>•••</strong>
-          </div>
-        </div>
-        <p className="card-preview__button">Save Payment Method</p>
-        <figcaption>
-          Illustrated preview only. This is not Stripe’s hosted page. Payment details would be handled by Stripe, and Simple Salon would not store the card number.
-        </figcaption>
-      </figure>
-      <div className="card-preview__saved">
-        <p>Card saved for this demo</p>
-        <strong>Emily Carter · Visa ending in 4242</strong>
-        <button type="button" onClick={onShowClient}>See saved card in the stylist client list</button>
-      </div>
-    </div>
-  )
-}
-
 function Briefing({ briefing, onOpenCalendar }) {
   return (
     <Story
       eyebrow="To Stylist · Daily at 8 AM"
       title="Your Day at a Glance"
-      trigger="Automatically sent at 8 AM to help the stylist prepare for the day's appointments."
+      trigger="A sample 8 AM briefing that helps the stylist prepare for the day. It is separate from the changes-and-attention summary."
       audience="Mara at Lumen & Co."
-      why="The stylist starts the day knowing the book, open reschedule requests, missing cards, and unpaid visits."
+      why="The stylist sees the book, open reschedule requests, missing cards, and unpaid visits before the first client."
     >
       <Letter
         to="Mara"
         subject="Your Day at a Glance"
         actions={<button type="button" onClick={onOpenCalendar}>Open Stylist Calendar</button>}
       >
-        <p>Good morning, Mara. Here is {briefing.dateLabel} at Lumen & Co.</p>
+        <p>Good morning, Mara. Here is {briefing.dateLabel} at Lumen & Co. This sample briefing is separate from the daily changes email.</p>
         <h5>Today’s appointments</h5>
         <BulletList items={linesOrNone(briefing.appointments)} />
         <h5>Outstanding reschedule requests</h5>
@@ -128,9 +93,9 @@ function PaymentStory({ appointment, onPay }) {
     <Story
       eyebrow="To Customer · After Appointment"
       title="Customer Payment Request"
-      trigger="After an appointment, the stylist enters the final service price. The customer receives an email to approve payment and optionally add a tip."
+      trigger="The stylist marks the appointment Completed. The final price is sent automatically. There is no separate payment button."
       audience="Emily Carter"
-      why="The stylist does not have to text a total or handle a tip at the chair. The customer reviews it when they are ready."
+      why="The stylist does not chase the payment. The customer reviews the total and adds a tip when ready."
       prominent
     >
       <Letter
@@ -139,23 +104,59 @@ function PaymentStory({ appointment, onPay }) {
         actions={appointment ? <button type="button" onClick={onPay}>{label}</button> : null}
       >
         <p>Hi Emily,</p>
-        <p>Thank you for visiting Lumen & Co.! We hope you enjoyed your appointment.</p>
-        <p>Your stylist has prepared your final service total.</p>
-        <p>Please review the amount, add an optional tip, and confirm your payment.</p>
+        <p>Thank you for visiting Lumen & Co.!</p>
+        <p>Your appointment is complete. Please review your final service amount, add an optional tip, and confirm your payment.</p>
         <p className="demo-letter__amount"><span>{copy.service}</span><strong>{copy.amount}</strong></p>
       </Letter>
     </Story>
   )
 }
 
-function FollowUp({ digest, onOpenCalendar }) {
+function ReminderStory({ appointment }) {
+  const [note, setNote] = useState('')
+
+  async function preview(which) {
+    if (!appointment) return
+    const result = await previewPaymentReminder(appointment.id, which)
+    setNote(result.ok
+      ? 'The reminder was added under Messages from this visit. Nothing was emailed, and the demo did not wait.'
+      : result.message)
+  }
+
+  return (
+    <Story
+      eyebrow="To Customer · After Appointment"
+      title="Payment Reminder"
+      trigger="Automatically reminds the customer after 24 hours and again after 72 hours if payment has not been completed."
+      audience="The customer with an unpaid visit"
+      why="The stylist does not have to remember who still owes, and reminders stop once the payment is approved."
+    >
+      <Letter
+        to="Emily Carter"
+        subject="Payment reminder — Lumen & Co."
+        actions={(
+          <>
+            <button type="button" onClick={() => preview('24h')}>Preview 24-hour reminder</button>
+            <button type="button" onClick={() => preview('72h')}>Preview 72-hour reminder</button>
+          </>
+        )}
+      >
+        <p>If the visit is still awaiting payment, Simple Salon can remind the customer the next day and again after three days.</p>
+        <p>These buttons only preview the message. The demo does not wait 24 or 72 hours.</p>
+        {note ? <p role="status">{note}</p> : null}
+      </Letter>
+    </Story>
+  )
+}
+
+function FollowUp({ digest, withoutCard, onOpenCalendar }) {
   return (
     <Story
       eyebrow="To Stylist · Daily at 8 AM"
       title="Daily Changes & Follow-Ups"
-      trigger="Sent at 8 AM with yesterday's changes and outstanding items requiring attention, without sending separate emails for every customer action."
+      trigger="One daily email at 8 AM summarizes yesterday's appointment changes and outstanding items that need attention."
       audience="Mara at Lumen & Co."
-      why="One briefing replaces a stack of individual alerts, while anything still waiting stays easy to find."
+      why="One note replaces a separate email for every booking, cancellation, and confirmation."
     >
       <Letter
         to="Mara"
@@ -168,8 +169,8 @@ function FollowUp({ digest, onOpenCalendar }) {
         <BulletList items={linesOrNone(digest.reschedules)} />
         <p>Overdue payments</p>
         <BulletList items={linesOrNone(digest.overdue)} />
-        <p>Customers requiring payment follow-up</p>
-        <BulletList items={linesOrNone(digest.followUp)} />
+        <p>Customers without a saved card for today's appointments</p>
+        <BulletList items={linesOrNone(withoutCard)} />
         <h5>Yesterday’s changes</h5>
         <p>Cancellations</p>
         <BulletList items={linesOrNone(digest.cancellations)} />
@@ -224,11 +225,6 @@ export default function DemoInbox({ onOpenCustomer, onOpenStylist }) {
     onOpenStylist()
   }
 
-  function openEmilyCard() {
-    focusStylistView({ tab: 'clients', clientId: EMILY_CLIENT_ID })
-    onOpenStylist()
-  }
-
   function openPayment() {
     if (!emily) return
     focusCustomerAppointment(emily.id, 'pay')
@@ -250,20 +246,12 @@ export default function DemoInbox({ onOpenCustomer, onOpenStylist }) {
     <section className="demo-inbox">
       <header className="demo-inbox__intro">
         <h2>Automated Emails & Payments</h2>
-        <p>See how Simple Salon keeps customers informed, simplifies payments, and reduces daily administrative work.</p>
+        <p>See how Simple Salon automatically handles appointment communication, payment requests, reminders, and daily stylist updates.</p>
       </header>
       <Briefing briefing={briefing} onOpenCalendar={() => openCalendar(briefing.dateKey)} />
       <PaymentStory appointment={emily} onPay={openPayment} />
-      <Story
-        eyebrow="Payment Setup"
-        title="Save a Card for Faster Checkout"
-        trigger="A customer chooses to save a payment method before a future visit."
-        audience="The customer, with a saved-card indicator for the stylist"
-        why="Customers can securely save a payment method through Stripe. Simple Salon never stores their actual card information."
-      >
-        <CardSetupPreview onShowClient={openEmilyCard} />
-      </Story>
-      <FollowUp digest={digest} onOpenCalendar={() => openCalendar('')} />
+      <ReminderStory appointment={emily} />
+      <FollowUp digest={digest} withoutCard={briefing.withoutCard} onOpenCalendar={() => openCalendar('')} />
       <VisitMail messages={messages} onAction={openAction} />
     </section>
   )

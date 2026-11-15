@@ -10,8 +10,10 @@ import SettingsSheet from './components/SettingsSheet.jsx'
 import { useHorizontalSwipe } from './hooks/useHorizontalSwipe.js'
 import { getAdjacentTab } from './utils/swipeNav.js'
 import CustomerDemo from './customer/CustomerDemo.jsx'
+import CardSetup from './demo/CardSetup.jsx'
 import DemoChrome from './demo/DemoChrome.jsx'
 import DemoInbox from './demo/DemoInbox.jsx'
+import DemoIntro from './demo/DemoIntro.jsx'
 import { takeStylistFocus } from './demo/focus.js'
 import './App.css'
 import './demo/demo.css'
@@ -182,8 +184,35 @@ function DemoApp({ onRefresh, storageMode }) {
     <div className="demo-root">
       <DemoChrome view={view} onView={setView} />
       <div className="demo-stage">
-        {view === 'stylist' ? <AppShell onRefresh={onRefresh} storageMode={storageMode} /> : null}
-        {view === 'customer' ? <CustomerDemo /> : null}
+        {view === 'stylist' ? (
+          <div className="demo-section">
+            <DemoIntro
+              title="Stylist Mobile App"
+              subtitle="Your day-to-day workspace for managing appointments, customers, and schedule changes."
+              who="The stylist, on their phone."
+              does="Shows the day, clients, and schedule changes."
+              trigger="Used throughout the day, and when an appointment is marked completed."
+              relief="Booking, changes, and payment requests stay in one place."
+            />
+            <AppShell onRefresh={onRefresh} storageMode={storageMode} />
+          </div>
+        ) : null}
+        {view === 'customer' ? (
+          <div className="demo-section">
+            <DemoIntro
+              title="Customer Online Booking"
+              subtitle="Existing customers can book appointments online without calling or texting their stylist."
+              who="An existing customer."
+              does="Books, confirms, cancels, or asks to reschedule."
+              trigger="The customer opens the booking page."
+              relief="The stylist does not have to trade messages to fill the book."
+            />
+            <CustomerDemo />
+          </div>
+        ) : null}
+        {view === 'cards' ? (
+          <CardSetup onOpenStylist={() => setView('stylist')} />
+        ) : null}
         {view === 'inbox' ? (
           <DemoInbox onOpenCustomer={() => setView('customer')} onOpenStylist={() => setView('stylist')} />
         ) : null}

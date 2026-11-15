@@ -31,6 +31,7 @@ export function decorateShowcaseAppointments(appointments) {
     if (appointment.id === 'demo-appt-01') {
       return {
         ...appointment,
+        completedAt: '2026-11-16T14:00:00.000Z',
         payment: {
           status: 'requested',
           amountCents: 6500,

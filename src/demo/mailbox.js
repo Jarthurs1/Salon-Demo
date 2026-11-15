@@ -127,9 +127,16 @@ export function recordDemoMail(kind, appointment, extra = {}, storage) {
     paymentRequest: {
       kind,
       to: name,
-      subject: `Payment request — ${salon}`,
-      body: `${name}, ${service} on ${when} is ready to pay. The amount due is ${extra.amount || ''}. You can add a tip before approving.`,
-      actions: [{ id: 'pay', label: 'Review payment', appointmentId: appointment?.id }],
+      subject: 'Thank You for Visiting Lumen & Co.',
+      body: `Hi ${name.split(' ')[0]},\n\nThank you for visiting ${salon}!\n\nYour appointment is complete. Please review your final service amount, add an optional tip, and confirm your payment.\n\n${service} on ${when}: ${extra.amount || ''}`,
+      actions: [{ id: 'pay', label: 'Review & Pay', appointmentId: appointment?.id }],
+    },
+    paymentReminder: {
+      kind,
+      to: name,
+      subject: `Payment reminder — ${salon}`,
+      body: `${name}, your ${service} on ${when} is still awaiting payment${extra.amount ? ` (${extra.amount})` : ''}. This is the simulated reminder sent ${extra.hours || 'later'} after the visit. No email was sent.`,
+      actions: [{ id: 'pay', label: 'Review & Pay', appointmentId: appointment?.id }],
     },
     receipt: {
       kind,

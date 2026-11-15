@@ -92,6 +92,7 @@ function normalize(record) {
     ownerNotifications: record.ownerNotifications || {},
     customerNotifications: record.customerNotifications || {},
     payment: type === 'blocked' ? null : normalizePayment(record.payment),
+    completedAt: type === 'blocked' ? null : record.completedAt || null,
   }
 }
 

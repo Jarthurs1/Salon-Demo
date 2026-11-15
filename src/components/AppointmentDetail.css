@@ -50,6 +50,50 @@
   color: #fff;
 }
 
+.appointment-detail__payment {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.appointment-detail__payment h3 {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6f615b;
+}
+
+.appointment-detail__payment p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.payment-price {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.payment-price span {
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: #6f615b;
+}
+
+.payment-price input,
+.card-preview__saved select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e4d8d2;
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1.05rem;
+  background: #fff;
+  color: #2c2422;
+}
+
 .appointment-detail__reschedule-hint {
   margin: 0.65rem 0 0;
   padding: 0.75rem 0.9rem;

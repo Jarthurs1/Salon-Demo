@@ -57,7 +57,7 @@ export default function AppointmentCard({ appointment, onSelect }) {
           <span className="appointment-card__duration">Paid</span>
         ) : null}
         {appointment.payment?.status === 'requested' ? (
-          <span className="appointment-card__duration">Payment due</span>
+          <span className="appointment-card__duration">Awaiting Payment</span>
         ) : null}
       </div>
     </article>
