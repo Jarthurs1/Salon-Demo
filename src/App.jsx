@@ -15,7 +15,8 @@ import DemoChrome from './demo/DemoChrome.jsx'
 import DemoInbox from './demo/DemoInbox.jsx'
 import DemoIntro from './demo/DemoIntro.jsx'
 import SmsPreview from './demo/SmsPreview.jsx'
-import { takeStylistFocus } from './demo/focus.js'
+import { peekStylistFocus, subscribeStylistFocus, takeStylistFocus } from './demo/focus.js'
+import { scrollToDemoSection } from './demo/sections.js'
 import './App.css'
 import './demo/demo.css'
 
@@ -34,6 +35,7 @@ function AppShell({ onRefresh, storageMode }) {
   const [showSettings, setShowSettings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const contentRef = useRef(null)
+  const shellRef = useRef(null)
 
   const needsMandatoryGuide =
     storageMode === 'aws' &&
@@ -42,11 +44,46 @@ function AppShell({ onRefresh, storageMode }) {
     !hasCompletedHelpGuide
 
   useEffect(() => {
-    const focus = takeStylistFocus()
-    if (!focus) return
-    setActiveTab(focus.tab === 'clients' ? 'clients' : 'calendar')
-    if (focus.dateKey) setCalendarFocusDate(focus.dateKey)
-    if (focus.clientId) setClientFocusId(focus.clientId)
+    function apply(focus) {
+      if (!focus) return
+      setActiveTab(focus.tab === 'clients' ? 'clients' : 'calendar')
+      if (focus.dateKey) setCalendarFocusDate(focus.dateKey)
+      if (focus.clientId) setClientFocusId(focus.clientId)
+      takeStylistFocus()
+    }
+    apply(peekStylistFocus())
+    return subscribeStylistFocus(apply)
+  }, [])
+
+  useEffect(() => {
+    const frame = shellRef.current?.querySelector('.app-frame')
+    const nav = frame?.querySelector('.bottom-nav')
+    if (!frame || !nav) return undefined
+    let frameId = 0
+    function update() {
+      const rect = frame.getBoundingClientRect()
+      const dock = rect.top < window.innerHeight - 8 && rect.bottom > window.innerHeight + 4
+      nav.classList.toggle('is-docked', dock)
+      if (dock) {
+        nav.style.left = `${rect.left}px`
+        nav.style.width = `${rect.width}px`
+      } else {
+        nav.style.left = ''
+        nav.style.width = ''
+      }
+    }
+    function onScroll() {
+      cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      cancelAnimationFrame(frameId)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
   }, [])
 
   function handleTabChange(tab) {
@@ -110,7 +147,7 @@ function AppShell({ onRefresh, storageMode }) {
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" ref={shellRef}>
       <div className="app-frame">
         <main className="app-content" ref={contentRef}>
           <div
@@ -180,45 +217,68 @@ function AppShell({ onRefresh, storageMode }) {
 }
 
 function DemoApp({ onRefresh, storageMode }) {
-  const [view, setView] = useState('stylist')
+  const [active, setActive] = useState('stylist')
+  const scrolling = useRef(false)
+
+  useEffect(() => {
+    const nodes = ['stylist', 'customer', 'cards', 'inbox', 'sms']
+      .map((id) => document.getElementById(id))
+      .filter(Boolean)
+    if (!nodes.length) return undefined
+    const observer = new IntersectionObserver((entries) => {
+      if (scrolling.current) return
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+      if (visible[0]) setActive(visible[0].target.id)
+    }, { rootMargin: '-15% 0px -55% 0px', threshold: [0.15, 0.4, 0.7] })
+    nodes.forEach((node) => observer.observe(node))
+    return () => observer.disconnect()
+  }, [])
+
+  function openSection(id) {
+    scrolling.current = true
+    setActive(id)
+    scrollToDemoSection(id)
+    window.setTimeout(() => {
+      scrolling.current = false
+    }, 700)
+  }
+
   return (
     <div className="demo-root">
-      <DemoChrome view={view} onView={setView} />
-      <div className="demo-stage">
-        {view === 'stylist' ? (
-          <div className="demo-section">
-            <DemoIntro
-              title="Stylist Mobile App"
-              subtitle="Your day-to-day workspace for managing appointments, customers, and schedule changes."
-              who="The stylist, on their phone."
-              does="Shows the day, clients, and schedule changes."
-              trigger="Used throughout the day, and when an appointment is marked completed."
-              relief="Booking, changes, and payment requests stay in one place."
-            />
-            <AppShell onRefresh={onRefresh} storageMode={storageMode} />
-          </div>
-        ) : null}
-        {view === 'customer' ? (
-          <div className="demo-section">
-            <DemoIntro
-              title="Customer Online Booking"
-              subtitle="Existing customers can book appointments online without calling or texting their stylist."
-              who="An existing customer."
-              does="Books, confirms, cancels, or asks to reschedule."
-              trigger="The customer opens the booking page."
-              relief="The stylist does not have to trade messages to fill the book."
-            />
-            <CustomerDemo />
-          </div>
-        ) : null}
-        {view === 'cards' ? (
-          <CardSetup onOpenStylist={() => setView('stylist')} />
-        ) : null}
-        {view === 'inbox' ? (
-          <DemoInbox onOpenCustomer={() => setView('customer')} onOpenStylist={() => setView('stylist')} />
-        ) : null}
-        {view === 'sms' ? <SmsPreview /> : null}
-      </div>
+      <DemoChrome active={active} onSelect={openSection} />
+      <main className="demo-stage">
+        <section id="stylist" className="demo-section">
+          <DemoIntro
+            title="Stylist Experience"
+            subtitle="Manage appointments, clients, and your daily schedule in one place."
+          />
+          <AppShell onRefresh={onRefresh} storageMode={storageMode} />
+        </section>
+        <section id="customer" className="demo-section">
+          <DemoIntro
+            title="Customer Experience"
+            subtitle="Existing customers can book, confirm, and manage appointments online."
+          />
+          <CustomerDemo />
+        </section>
+        <section id="cards" className="demo-section">
+          <CardSetup onOpenStylist={() => openSection('stylist')} />
+        </section>
+        <section id="inbox" className="demo-section">
+          <DemoInbox
+            onOpenCustomer={() => openSection('customer')}
+            onOpenStylist={() => openSection('stylist')}
+          />
+        </section>
+        <section id="sms" className="demo-section">
+          <SmsPreview />
+        </section>
+      </main>
+      <footer className="demo-footer">
+        This is an interactive demonstration using fictional data. No real appointments, emails, or payments are processed.
+      </footer>
     </div>
   )
 }

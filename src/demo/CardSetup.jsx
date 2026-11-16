@@ -35,10 +35,6 @@ export default function CardSetup({ onOpenStylist }) {
       <DemoIntro
         title="Secure Card Setup"
         subtitle="Customers can securely save a payment method for faster checkout after future appointments."
-        who="The customer, once. The stylist only sees that a card is ready."
-        does="Saves a payment method for later checkout."
-        trigger="The customer chooses to save a card before a future visit."
-        relief="The stylist does not collect or store card numbers."
       />
       <figure className="card-preview" aria-label="Illustrated payment setup preview">
         <p className="card-preview__salon">Lumen & Co.</p>

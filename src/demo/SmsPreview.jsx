@@ -22,10 +22,6 @@ export default function SmsPreview() {
       <DemoIntro
         title="SMS Confirmations"
         subtitle="Simple Salon automatically reminds customers of upcoming appointments. Customers can confirm by replying YES, and the stylist sees their updated confirmation status without making a phone call."
-        who="Emily Carter, texting with Lumen & Co."
-        does="Confirms a visit or asks for a new time."
-        trigger="An automatic reminder before the appointment."
-        relief="The stylist does not need to call to find out who is coming."
       />
       <p className="sms-preview__label">Interactive SMS Preview — Simulated Messages</p>
       <div className="sms-phone">

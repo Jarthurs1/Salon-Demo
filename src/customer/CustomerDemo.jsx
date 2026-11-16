@@ -24,7 +24,7 @@ import {
 } from '../demo/customerFlow.js'
 import { approveDemoPayment, tipCentsFor } from '../demo/payments.js'
 import { money } from '../demo/showcase.js'
-import { takeCustomerFocus } from '../demo/focus.js'
+import { peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from '../demo/focus.js'
 import './theme.css'
 import './BookingPage.css'
 
@@ -69,13 +69,17 @@ export default function CustomerDemo() {
   const selected = mine.find((item) => item.id === appointmentId) || null
 
   useEffect(() => {
-    const focus = takeCustomerFocus()
-    if (!focus?.appointmentId) return
-    const match = appointments.find((item) => item.id === focus.appointmentId)
-    if (!match) return
-    setClientId(match.clientId)
-    setAppointmentId(match.id)
-    setMode(focus.mode === 'pay' ? 'pay' : 'manage')
+    function apply(focus) {
+      if (!focus?.appointmentId) return
+      const match = appointments.find((item) => item.id === focus.appointmentId)
+      if (!match) return
+      setClientId(match.clientId)
+      setAppointmentId(match.id)
+      setMode(focus.mode === 'pay' ? 'pay' : 'manage')
+      takeCustomerFocus()
+    }
+    apply(peekCustomerFocus())
+    return subscribeCustomerFocus(apply)
   }, [appointments])
 
   function timesFor(day, excludeId) {

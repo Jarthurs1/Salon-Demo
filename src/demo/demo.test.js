@@ -5,6 +5,8 @@ import { assertDemoRequestAllowed } from './networkGuard.js'
 import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, requestDemoPayment, tipCentsFor } from './payments.js'
 import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment } from './inboxStories.js'
 import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, statusFor } from './smsPreview.js'
+import { focusCustomerAppointment, peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from './focus.js'
+import { DEMO_SECTIONS } from './sections.js'
 
 function memoryStorage() {
   const values = new Map()
@@ -110,6 +112,26 @@ describe('sms preview', () => {
     expect(statusFor('reschedule')).toBe('reschedule_requested')
     expect(SMS_RESCHEDULE_REPLY).toMatch(/stylist approves/)
     expect(JSON.stringify(messagesFor('reschedule'))).not.toMatch(/twilio|execute-api|sms\./i)
+  })
+})
+
+describe('demo navigation', () => {
+  it('keeps the mobile section labels and publishes focus while a section stays mounted', () => {
+    expect(DEMO_SECTIONS.map(([, label]) => label)).toEqual([
+      'Stylist Experience',
+      'Customer Experience',
+      'Card Setup',
+      'Emails & Payments',
+      'SMS Preview',
+    ])
+    const seen = []
+    const unsubscribe = subscribeCustomerFocus((value) => seen.push(value.mode))
+    focusCustomerAppointment('demo-appt-01', 'pay')
+    expect(peekCustomerFocus()).toEqual({ appointmentId: 'demo-appt-01', mode: 'pay' })
+    expect(seen).toEqual(['pay'])
+    expect(takeCustomerFocus()).toEqual({ appointmentId: 'demo-appt-01', mode: 'pay' })
+    expect(peekCustomerFocus()).toBeNull()
+    unsubscribe()
   })
 })
 
