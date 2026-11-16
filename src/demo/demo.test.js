@@ -6,7 +6,7 @@ import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, r
 import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment } from './inboxStories.js'
 import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, statusFor } from './smsPreview.js'
 import { focusCustomerAppointment, peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from './focus.js'
-import { DEMO_SECTIONS } from './sections.js'
+import { DEMO_ROUTES } from './sections.js'
 
 function memoryStorage() {
   const values = new Map()
@@ -35,7 +35,7 @@ describe('salon demo isolation', () => {
       { id: 'demo-client-emily', firstName: 'Emily' },
       { id: 'demo-client-sarah', firstName: 'Sarah' },
     ])
-    expect(clients[0].savedCard.last4).toBe('4242')
+    expect(clients[0].savedCard).toBeNull()
     expect(clients[1].savedCard).toBeNull()
 
     const appointments = decorateShowcaseAppointments([
@@ -45,7 +45,8 @@ describe('salon demo isolation', () => {
       { id: 'demo-appt-05', type: 'appointment', date: '2026-11-18', status: 'confirmed' },
       { id: 'demo-appt-06', type: 'appointment', status: 'pending' },
     ])
-    expect(appointments.find((item) => item.id === 'demo-appt-01').payment.status).toBe('requested')
+    expect(appointments.find((item) => item.id === 'demo-appt-01').payment).toBeUndefined()
+    expect(appointments.find((item) => item.id === 'demo-appt-01').status).not.toBe('canceled')
     expect(appointments.find((item) => item.id === 'demo-appt-02').payment.status).toBe('requested')
     expect(appointments.find((item) => item.id === 'demo-appt-03').status).toBe('pending')
     expect(appointments.find((item) => item.id === 'demo-appt-05').status).toBe('reschedule_requested')
@@ -60,7 +61,9 @@ describe('salon demo isolation', () => {
     const [message] = listMessages(storage)
     expect(message.subject).toContain('Payment receipt')
     expect(message.body).toContain('$75.00')
-    expect(JSON.stringify(message)).not.toContain('execute-api')
+    recordDemoMail('paymentRequest', { id: 'demo-appt-01', clientName: 'Emily Carter', service: 'Haircut', date: '2026-11-16', startTime: '09:00' }, { amount: '$65.00' }, storage)
+    recordDemoMail('paymentRequest', { id: 'demo-appt-01', clientName: 'Emily Carter', service: 'Haircut', date: '2026-11-16', startTime: '09:00' }, { amount: '$65.00' }, storage)
+    expect(listMessages(storage).filter((item) => item.kind === 'paymentRequest')).toHaveLength(1)
     recordDemoMail('reminder', { clientName: 'Emily Carter', service: 'Haircut', date: '2026-11-16', startTime: '09:00' }, {}, storage)
     expect(listMessages(storage)[0].body).toContain('Monday, November 16 at 9:00 AM')
     expect(listMessages(storage)[0].body).not.toMatch(/\d{4}-\d{2}-\d{2}/)
@@ -89,8 +92,8 @@ describe('salon demo isolation', () => {
       ...briefing.unpaid,
     ].join(' ')
     expect(shown).not.toMatch(/\d{4}-\d{2}-\d{2}/)
-    expect(briefing.withoutCard.join(' ')).toContain('Sarah Bennett')
-    expect(briefing.unpaid.join(' ')).toContain('$65.00')
+    expect(briefing.withoutCard.join(' ')).toContain('Emily Carter')
+    expect(briefing.unpaid).toEqual([])
     const emily = findEmilyPayment(appointments)
     expect(emilyPaymentCopy(emily).service).toBe('Haircut')
     expect(emilyPaymentCopy(emily).amount).toBe('$65.00')
@@ -103,26 +106,22 @@ describe('salon demo isolation', () => {
 
 describe('sms preview', () => {
   it('confirms with YES and keeps a reschedule on the original time', () => {
-    expect(messagesFor('start')[0].text).toContain('Reply YES')
+    expect(messagesFor('start')[0].text).toContain('Please confirm your appointment')
     expect(messagesFor('yes-wait').map((item) => item.text)).toContain('YES')
     expect(statusFor('yes-wait')).toBe('pending')
     expect(messagesFor('yes-done').at(-1).text).toBe(SMS_CONFIRMED)
     expect(statusFor('yes-done')).toBe('confirmed')
-    expect(messagesFor('reschedule').at(-1).text).toBe(SMS_RESCHEDULE_REPLY)
-    expect(statusFor('reschedule')).toBe('reschedule_requested')
     expect(SMS_RESCHEDULE_REPLY).toMatch(/stylist approves/)
-    expect(JSON.stringify(messagesFor('reschedule'))).not.toMatch(/twilio|execute-api|sms\./i)
+    expect(SMS_RESCHEDULE_REPLY).not.toMatch(/twilio|execute-api|sms\./i)
   })
 })
 
 describe('demo navigation', () => {
   it('keeps the mobile section labels and publishes focus while a section stays mounted', () => {
-    expect(DEMO_SECTIONS.map(([, label]) => label)).toEqual([
+    expect(DEMO_ROUTES.map(([, label]) => label)).toEqual([
       'Stylist Experience',
       'Customer Experience',
-      'Card Setup',
-      'Emails & Payments',
-      'SMS Preview',
+      'Automated Messaging',
     ])
     const seen = []
     const unsubscribe = subscribeCustomerFocus((value) => seen.push(value.mode))
@@ -155,6 +154,11 @@ describe('payment helpers', () => {
       status: 'reschedule_requested',
       rescheduleRequest: { status: 'pending' },
     }, '65')).toMatch(/reschedule/)
+    expect(completionBlockReason({
+      type: 'appointment',
+      status: 'confirmed',
+      payment: { status: 'paid_outside' },
+    }, '65')).toMatch(/already paid/)
     expect(completionBlockReason({ type: 'appointment', status: 'confirmed' }, '0')).toMatch(/price/)
   })
 })

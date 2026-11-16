@@ -345,7 +345,7 @@ export function buildDemoAppointments(referenceDate = new Date()) {
       startTime: '09:00',
       durationMinutes: 45,
       service: 'Haircut',
-      status: 'confirmed',
+      status: 'pending',
     }),
     appt({
       id: 'demo-appt-02',

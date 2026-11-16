@@ -45,7 +45,9 @@
   display: none;
 }
 
+.demo-chrome__nav a,
 .demo-chrome__nav button,
+.demo-chrome__nav a,
 .demo-chrome__reset,
 .demo-inbox__actions button {
   border: 0;
@@ -60,11 +62,17 @@
   white-space: nowrap;
 }
 
+.demo-chrome__nav a,
 .demo-chrome__nav button {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 
-.demo-chrome__nav button.is-active {
+.demo-chrome__nav a.is-active,
+.demo-chrome__nav button.is-active,
+.demo-chrome__nav a.is-active {
   background: #faf7f5;
   color: #2c2422;
 }
@@ -572,4 +580,254 @@
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1.6rem;
   font-weight: 600;
+}
+
+.demo-lede,
+.demo-page {
+  width: min(100%, 68rem);
+  margin: 0 auto;
+  padding: 0.35rem 1rem 0;
+  color: #2c2422;
+}
+
+.demo-lede__brand,
+.feature-card__kicker {
+  margin: 0;
+  color: #9a6b63;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.demo-lede__headline {
+  margin: 0.15rem 0 0.3rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.55rem;
+}
+
+.demo-lede p,
+.demo-page__support,
+.message-note {
+  margin: 0.2rem 0 0;
+  color: #6f615b;
+  line-height: 1.4;
+}
+
+.demo-lede__note {
+  margin-bottom: 0.35rem;
+  font-size: 0.78rem;
+}
+
+.demo-page {
+  padding-bottom: 2rem;
+}
+
+.demo-steps {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.8rem 0 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.demo-steps button {
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #2c2422;
+  min-height: 2.6rem;
+  padding: 0.35rem 0.8rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.demo-steps button.is-active {
+  background: #2c2422;
+  color: #faf7f5;
+}
+
+.stylist-layout {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.stylist-copy h3,
+.feature-card h3,
+.letter h3,
+.settings-preview h3,
+.card-setup h3 {
+  margin: 0 0 0.35rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.45rem;
+}
+
+.stylist-copy ul,
+.letter ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.1rem;
+  color: #3a312d;
+}
+
+.stylist-copy li + li,
+.letter li + li {
+  margin-top: 0.35rem;
+}
+
+.feature-grid,
+.message-stack {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.25rem;
+}
+
+.feature-card,
+.letter,
+.settings-preview,
+.card-setup,
+.demo-page__notice {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem 1.05rem;
+  box-shadow: 0 8px 24px rgba(44, 36, 34, 0.06);
+}
+
+.feature-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.7rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-flow li {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #f6f0ea;
+}
+
+.feature-card__note {
+  margin: 0;
+  color: #6f615b;
+  font-size: 0.85rem;
+}
+
+.letter__meta {
+  margin: 0 0 0.35rem;
+  color: #8d7d76;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.letter__actions,
+.card-setup__actions,
+.demo-confirm__actions,
+.settings-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.letter button,
+.card-setup button,
+.demo-confirm button,
+.settings-preview select {
+  border: 0;
+  border-radius: 999px;
+  background: #302724;
+  color: #fff;
+  min-height: 2.6rem;
+  padding: 0.4rem 0.85rem;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.letter button.is-quiet,
+.card-setup button.is-quiet,
+.demo-confirm button.is-quiet {
+  background: transparent;
+  color: #2c2422;
+  border: 1px solid #d9cdc6;
+}
+
+.settings-preview {
+  display: grid;
+  margin-top: 1rem;
+}
+
+.settings-preview label {
+  display: grid;
+  gap: 0.3rem;
+  color: #6f615b;
+  font-size: 0.82rem;
+}
+
+.settings-preview select {
+  background: #fff;
+  color: #2c2422;
+  border: 1px solid #e4d8d2;
+  border-radius: 0.75rem;
+}
+
+.demo-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(44, 36, 34, 0.45);
+}
+
+.demo-confirm__card {
+  width: min(100%, 26rem);
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.1rem;
+}
+
+.demo-confirm__card h2 {
+  margin: 0 0 0.4rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+@media (min-width: 960px) {
+  .stylist-layout {
+    grid-template-columns: minmax(16rem, 22rem) minmax(20rem, 430px);
+    align-items: start;
+    justify-content: center;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .demo-root .stylist-stage .app-shell {
+    height: min(760px, calc(100dvh - 12rem));
+    max-height: min(760px, calc(100dvh - 12rem));
+    overflow: hidden;
+    padding: 0.55rem;
+    border-radius: 2rem;
+    background: #2c2422;
+  }
+
+  .demo-root .stylist-stage .app-frame {
+    display: flex;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: 1.55rem;
+  }
+
+  .demo-root .stylist-stage .app-content {
+    flex: 1;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }

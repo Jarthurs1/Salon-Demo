@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import DateSelector from './DateSelector.jsx'
 import SalonFrame from './SalonFrame.jsx'
 import TimeSelector from './TimeSelector.jsx'
@@ -25,15 +25,16 @@ import {
 import { approveDemoPayment, tipCentsFor } from '../demo/payments.js'
 import { money } from '../demo/showcase.js'
 import { peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from '../demo/focus.js'
+import { EMILY_CLIENT_ID, EMILY_PAYMENT_APPOINTMENT_ID } from '../demo/inboxStories.js'
 import './theme.css'
 import './BookingPage.css'
 
 const TIP_CHOICES = [
-  { id: '0', label: 'No tip' },
+  { id: '0', label: 'No Tip' },
   { id: '15', label: '15%' },
   { id: '20', label: '20%' },
   { id: '25', label: '25%' },
-  { id: 'custom', label: 'Custom tip' },
+  { id: 'custom', label: 'Custom Amount' },
 ]
 
 function sanitizeTipInput(value) {
@@ -43,13 +44,13 @@ function sanitizeTipInput(value) {
   return `${whole.slice(0, 4)}.${rest.join('').slice(0, 2)}`
 }
 
-export default function CustomerDemo() {
+export default function CustomerDemo({ step = 'book' }) {
   const clients = useClients()
   const appointments = useAppointments()
   const settings = useScheduleSettings()
-  const [clientId, setClientId] = useState('')
-  const [appointmentId, setAppointmentId] = useState('')
-  const [mode, setMode] = useState('pick')
+  const [clientId, setClientId] = useState(EMILY_CLIENT_ID)
+  const [appointmentId, setAppointmentId] = useState(EMILY_PAYMENT_APPOINTMENT_ID)
+  const [mode, setMode] = useState(step === 'pay' ? 'pay' : step === 'manage' ? 'manage' : 'book-service')
   const [service, setService] = useState(SERVICE_OPTIONS[0])
   const [dateKey, setDateKey] = useState('')
   const [startTime, setStartTime] = useState('')
@@ -57,6 +58,7 @@ export default function CustomerDemo() {
   const [customTip, setCustomTip] = useState('')
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
+  const started = useRef('')
   const today = useMemo(() => startOfDay(new Date()), [])
   const tomorrow = useMemo(() => addDays(today, 1), [today])
   const horizon = useMemo(() => addDays(today, 90), [today])
@@ -82,6 +84,16 @@ export default function CustomerDemo() {
     return subscribeCustomerFocus(apply)
   }, [appointments])
 
+  useEffect(() => {
+    if (started.current === step || peekCustomerFocus()?.appointmentId) return
+    const emily = clients.find((item) => item.id === EMILY_CLIENT_ID)
+    if (!emily || !appointments.length) return
+    started.current = step
+    setClientId(emily.id)
+    const featured = appointments.find((item) => item.id === EMILY_PAYMENT_APPOINTMENT_ID)
+    if (featured) setAppointmentId(featured.id)
+  }, [appointmentId, appointments, clients, step])
+
   function timesFor(day, excludeId) {
     return getAvailableStartTimes(day, service.defaultDurationMinutes, appointments, { excludeId })
   }
@@ -99,7 +111,6 @@ export default function CustomerDemo() {
         setError(result.message || 'That change is not available.')
         return
       }
-      setNotice('')
       setMode(nextMode)
     } catch (err) {
       setError(err.message || 'Something went wrong.')
@@ -160,7 +171,6 @@ export default function CustomerDemo() {
                 ))}
               </div>
               <button type="button" className="btn" onClick={() => setMode('book-service')}>Book an appointment</button>
-              <button type="button" className="btn btn--ghost" onClick={() => setMode('pick')}>Switch customer</button>
             </>
           ) : null}
           {mode === 'book-service' || mode === 'reschedule-service' ? (
@@ -237,7 +247,7 @@ export default function CustomerDemo() {
                     date: dateKey,
                     startTime,
                   })
-                  setNotice('Your appointment is pending. A confirmation is in the Demo Inbox.')
+                  setNotice('Your appointment is on the stylist calendar and waiting for confirmation.')
                 }, 'home')}
               >
                 Book appointment
@@ -251,19 +261,33 @@ export default function CustomerDemo() {
               <p><strong>{selected.service}</strong></p>
               <p>{formatSelectedDate(parseDateKey(selected.date))} at {formatTimeDisplay(selected.startTime)}</p>
               {selected.rescheduleRequest?.status === 'pending' ? (
-                <p>Requested time: {formatSelectedDate(parseDateKey(selected.rescheduleRequest.date))} at {formatTimeDisplay(selected.rescheduleRequest.startTime)}. The salon will approve it.</p>
+                <p>Your reschedule request has been sent to your stylist. Your original appointment remains scheduled until the new time is approved.</p>
               ) : null}
+              {selected.status === 'canceled' ? <p>This appointment is canceled and the time is available again.</p> : null}
               {selected.status === 'pending' ? (
-                <button type="button" className="btn" onClick={() => run(() => confirmDemoAppointment(selected.id), 'home')}>Confirm Appointment</button>
-              ) : null}
-              {selected.status !== 'canceled' && selected.rescheduleRequest?.status !== 'pending' ? (
-                <button type="button" className="btn" onClick={() => setMode('reschedule-date')}>Request reschedule</button>
+                <button type="button" className="btn" onClick={() => run(() => confirmDemoAppointment(selected.id), 'manage')}>Confirm Appointment</button>
               ) : null}
               {selected.status !== 'canceled' ? (
-                <button type="button" className="btn btn--ghost" onClick={() => run(() => cancelDemoAppointment(selected.id), 'home')}>Cancel appointment</button>
+                <button type="button" className="btn btn--ghost" onClick={() => setMode('manage-actions')}>Manage Appointment</button>
               ) : null}
-              {selected.payment?.status === 'requested' ? (
-                <button type="button" className="btn" onClick={() => setMode('pay')}>Review payment</button>
+            </>
+          ) : null}
+          {selected && mode === 'manage-actions' ? (
+            <>
+              <h2>Manage appointment</h2>
+              <p>{selected.service} · {formatSelectedDate(parseDateKey(selected.date))} at {formatTimeDisplay(selected.startTime)}</p>
+              {selected.rescheduleRequest?.status === 'pending' ? (
+                <p>Your reschedule request has been sent to your stylist. Your original appointment remains scheduled until the new time is approved.</p>
+              ) : (
+                <button type="button" className="btn" onClick={() => setMode('reschedule-date')}>Request Reschedule</button>
+              )}
+              {selected.status !== 'canceled' ? (
+                <button type="button" className="btn btn--ghost" onClick={() => run(async () => {
+                  const result = await cancelDemoAppointment(selected.id)
+                  if (result?.ok === false) return result
+                  setNotice('The appointment is canceled and that time is open again.')
+                  return result
+                }, 'manage')}>Cancel Appointment</button>
               ) : null}
             </>
           ) : null}
@@ -279,25 +303,39 @@ export default function CustomerDemo() {
                 onClick={() => run(async () => {
                   const result = await requestDemoReschedule(selected.id, dateKey, startTime)
                   if (result?.ok === false) return result
-                  setNotice('Your reschedule request has been sent. The salon will approve or decline it.')
+                  setNotice('Your reschedule request has been sent to your stylist. Your original appointment remains scheduled until the new time is approved.')
                   return result
-                }, 'home')}
+                }, 'manage')}
               >
                 Submit reschedule request
               </button>
             </>
           ) : null}
+          {mode === 'pay' && selected && selected.payment?.status !== 'requested' && selected.payment?.status !== 'paid' && selected.payment?.status !== 'paid_outside' ? (
+            <>
+              <h2>Thank you for visiting Lumen & Co.!</h2>
+              <p>Please review your final service amount, add an optional tip, and confirm your payment.</p>
+              <p>This opens after Mara marks {selected.service} completed. The payment email is created automatically.</p>
+            </>
+          ) : null}
+          {selected?.payment?.status === 'paid_outside' && mode === 'pay' ? (
+            <>
+              <h2>Paid outside the app</h2>
+              <p>{selected.service} was marked paid outside Simple Salon. No further reminder is sent.</p>
+            </>
+          ) : null}
           {selected?.payment?.status === 'paid' && mode === 'pay' ? (
             <>
               <h2>Payment complete</h2>
-              <p>{`${selected.service} is paid. Total ${money((selected.payment.amountCents || 0) + (selected.payment.tipCents || 0))}.`}</p>
+              <p>{`${selected.service} is paid. Total ${money((selected.payment.amountCents || 0) + (selected.payment.tipCents || 0))}. A simulated receipt is in Automated Messaging.`}</p>
             </>
           ) : null}
           {selected?.payment?.status === 'requested' && mode === 'pay' ? (
             <>
-              <h2>Approve & Pay</h2>
+              <h2>Thank you for visiting Lumen & Co.!</h2>
+              <p>Please review your final service amount, add an optional tip, and confirm your payment.</p>
               <p>{selected.service} · {money(selected.payment.amountCents)}</p>
-              <p>{client?.savedCard ? `Fictional card ${client.savedCard.brand} ···· ${client.savedCard.last4}` : 'No card on file. Approval is simulated and does not collect card details.'}</p>
+              <p>{client?.savedCard ? `Fictional saved card ${client.savedCard.brand} ···· ${client.savedCard.last4}` : 'No card is saved. Approve & Pay uses a simulated card and does not collect a real card number.'}</p>
               <div className="tip-row">
                 {TIP_CHOICES.map((choice) => (
                   <button key={choice.id} type="button" className={choice.id === tipChoice ? 'is-selected' : ''} onClick={() => setTipChoice(choice.id)}>
@@ -323,15 +361,15 @@ export default function CustomerDemo() {
                 className="btn"
                 onClick={() => run(async () => {
                   await approveDemoPayment(selected.id, tipCents)
-                  setNotice('Payment approved. The receipt is in the Demo Inbox.')
-                }, 'home')}
+                  setNotice('Payment approved. The stylist calendar shows Paid, and reminders stop.')
+                }, 'pay')}
               >
                 Approve & Pay
               </button>
             </>
           ) : null}
-          {mode !== 'pick' ? (
-            <button type="button" className="btn btn--ghost" onClick={() => setMode(client ? 'home' : 'pick')}>Back</button>
+          {mode !== 'book-service' && mode !== 'manage' && mode !== 'pay' && mode !== 'pick' ? (
+            <button type="button" className="btn btn--ghost" onClick={() => setMode(mode.startsWith('reschedule') ? 'manage' : 'book-service')}>Back</button>
           ) : null}
         </section>
       </SalonFrame>

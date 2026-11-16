@@ -166,8 +166,29 @@
   color: #2c2422;
 }
 
-.appointment-detail__contact {
-  margin-top: 0.25rem;
+.appointment-detail__draft {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  border: 1px solid #e4d8d2;
+}
+
+.appointment-detail__draft p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.appointment-detail__request-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.appointment-detail__payment .form-btn--ghost {
+  background: transparent;
+  color: #6f615b;
 }
 
 .appointment-detail__message {

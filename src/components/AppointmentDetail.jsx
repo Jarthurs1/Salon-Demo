@@ -44,6 +44,7 @@ export default function AppointmentDetail({ appointment, onClose }) {
   const [releaseError, setReleaseError] = useState('')
   const [decisionError, setDecisionError] = useState('')
   const [deciding, setDeciding] = useState(false)
+  const [contactOpen, setContactOpen] = useState(false)
 
   const isBlocked = appointment.type === 'blocked' || appointment.status === 'blocked'
   const fullDayBlock = isBlocked && isFullDayBlock(appointment)
@@ -313,6 +314,14 @@ export default function AppointmentDetail({ appointment, onClose }) {
               </button>
               <button
                 type="button"
+                className="form-btn form-btn--primary"
+                disabled={deciding}
+                onClick={() => setContactOpen(true)}
+              >
+                Contact Customer
+              </button>
+              <button
+                type="button"
                 className="form-btn form-btn--ghost"
                 disabled={deciding}
                 onClick={async () => {
@@ -321,16 +330,25 @@ export default function AppointmentDetail({ appointment, onClose }) {
                   try {
                     await declineRescheduleRequest(appointment.id)
                   } catch (error) {
-                    setDecisionError(error?.message || 'Could not decline the request.')
+                    setDecisionError(error?.message || 'Could not keep the original time.')
                   } finally {
                     setDeciding(false)
                   }
                 }}
               >
-                Decline
+                Keep original time
               </button>
             </div>
             {decisionError ? <p role="alert">{decisionError}</p> : null}
+            {contactOpen ? (
+              <div className="appointment-detail__draft">
+                <p>Simulated message to {client?.firstName || 'the customer'}. Nothing is sent.</p>
+                <p>
+                  Hi {client?.firstName || 'there'}, this is Mara at Lumen & Co. I saw your request to move your {appointment.service || 'appointment'} from {formatSelectedDate(parseDateKey(appointment.date))} at {formatTimeDisplay(appointment.startTime)} to {formatSelectedDate(parseDateKey(appointment.rescheduleRequest.date))} at {formatTimeDisplay(appointment.rescheduleRequest.startTime)}. Your original time stays reserved until I approve a new one.
+                </p>
+                <button type="button" className="form-btn form-btn--ghost" onClick={() => setContactOpen(false)}>Close message</button>
+              </div>
+            ) : null}
           </div>
         ) : appointment.status === 'reschedule_requested' ? (
           <p className="appointment-detail__reschedule-hint" role="status">

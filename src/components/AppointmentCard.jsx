@@ -56,6 +56,12 @@ export default function AppointmentCard({ appointment, onSelect }) {
         {appointment.payment?.status === 'paid' ? (
           <span className="appointment-card__duration">Paid</span>
         ) : null}
+        {appointment.payment?.status === 'paid_outside' ? (
+          <span className="appointment-card__duration">Paid Outside App</span>
+        ) : null}
+        {appointment.payment?.status === 'paid_outside' ? (
+          <span className="appointment-card__duration">Paid Outside App</span>
+        ) : null}
         {appointment.payment?.status === 'requested' ? (
           <span className="appointment-card__duration">Awaiting Payment</span>
         ) : null}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { completeDemoAppointment } from '../demo/payments.js'
+import { completeDemoAppointment, markPaidOutside } from '../demo/payments.js'
 import { money, SERVICE_PRICES } from '../demo/showcase.js'
 
 export default function PaymentPanel({ appointment }) {
@@ -30,6 +30,7 @@ export default function PaymentPanel({ appointment }) {
   const canComplete = appointment.status === 'confirmed'
     && !rescheduleOpen
     && payment?.status !== 'paid'
+    && payment?.status !== 'paid_outside'
     && payment?.status !== 'requested'
 
   return (
@@ -42,8 +43,28 @@ export default function PaymentPanel({ appointment }) {
         </p>
       ) : null}
       {payment?.status === 'requested' ? (
-        <p>Awaiting Payment for {money(payment.amountCents)}. The customer can review it from Emails & Payments.</p>
+        <>
+          <p>Awaiting Payment for {money(payment.amountCents)}. Emily can review it in Automated Messaging.</p>
+          <button
+            type="button"
+            className="form-btn form-btn--ghost"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true)
+              setError('')
+              try {
+                const result = await markPaidOutside(appointment.id)
+                if (!result.ok) setError(result.message)
+              } finally {
+                setBusy(false)
+              }
+            }}
+          >
+            Paid Outside App
+          </button>
+        </>
       ) : null}
+      {payment?.status === 'paid_outside' ? <p>Paid Outside App. Reminders have stopped.</p> : null}
       {rescheduleOpen ? (
         <p>Resolve the reschedule request before this visit can be completed.</p>
       ) : null}
@@ -60,6 +81,23 @@ export default function PaymentPanel({ appointment }) {
           </label>
           <button type="button" className="form-btn form-btn--primary" disabled={busy} onClick={markCompleted}>
             Mark Completed
+          </button>
+          <button
+            type="button"
+            className="form-btn form-btn--ghost"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true)
+              setError('')
+              try {
+                const result = await markPaidOutside(appointment.id)
+                if (!result.ok) setError(result.message)
+              } finally {
+                setBusy(false)
+              }
+            }}
+          >
+            Paid Outside App
           </button>
         </>
       ) : null}

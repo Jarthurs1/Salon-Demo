@@ -9,14 +9,12 @@ import HowToUseGuide from './components/HowToUseGuide.jsx'
 import SettingsSheet from './components/SettingsSheet.jsx'
 import { useHorizontalSwipe } from './hooks/useHorizontalSwipe.js'
 import { getAdjacentTab } from './utils/swipeNav.js'
-import CustomerDemo from './customer/CustomerDemo.jsx'
-import CardSetup from './demo/CardSetup.jsx'
-import DemoChrome from './demo/DemoChrome.jsx'
-import DemoInbox from './demo/DemoInbox.jsx'
-import DemoIntro from './demo/DemoIntro.jsx'
-import SmsPreview from './demo/SmsPreview.jsx'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import CustomerPage from './demo/CustomerPage.jsx'
+import DemoShell from './demo/DemoShell.jsx'
+import MessagingPage from './demo/MessagingPage.jsx'
+import StylistPage from './demo/StylistPage.jsx'
 import { peekStylistFocus, subscribeStylistFocus, takeStylistFocus } from './demo/focus.js'
-import { scrollToDemoSection } from './demo/sections.js'
 import './App.css'
 import './demo/demo.css'
 
@@ -61,8 +59,9 @@ function AppShell({ onRefresh, storageMode }) {
     if (!frame || !nav) return undefined
     let frameId = 0
     function update() {
+      const mobile = window.matchMedia('(max-width: 959px)').matches
       const rect = frame.getBoundingClientRect()
-      const dock = rect.top < window.innerHeight - 8 && rect.bottom > window.innerHeight + 4
+      const dock = mobile && rect.top < window.innerHeight - 8 && rect.bottom > window.innerHeight + 4
       nav.classList.toggle('is-docked', dock)
       if (dock) {
         nav.style.left = `${rect.left}px`
@@ -217,69 +216,18 @@ function AppShell({ onRefresh, storageMode }) {
 }
 
 function DemoApp({ onRefresh, storageMode }) {
-  const [active, setActive] = useState('stylist')
-  const scrolling = useRef(false)
-
-  useEffect(() => {
-    const nodes = ['stylist', 'customer', 'cards', 'inbox', 'sms']
-      .map((id) => document.getElementById(id))
-      .filter(Boolean)
-    if (!nodes.length) return undefined
-    const observer = new IntersectionObserver((entries) => {
-      if (scrolling.current) return
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-      if (visible[0]) setActive(visible[0].target.id)
-    }, { rootMargin: '-15% 0px -55% 0px', threshold: [0.15, 0.4, 0.7] })
-    nodes.forEach((node) => observer.observe(node))
-    return () => observer.disconnect()
-  }, [])
-
-  function openSection(id) {
-    scrolling.current = true
-    setActive(id)
-    scrollToDemoSection(id)
-    window.setTimeout(() => {
-      scrolling.current = false
-    }, 700)
-  }
-
   return (
-    <div className="demo-root">
-      <DemoChrome active={active} onSelect={openSection} />
-      <main className="demo-stage">
-        <section id="stylist" className="demo-section">
-          <DemoIntro
-            title="Stylist Experience"
-            subtitle="Manage appointments, clients, and your daily schedule in one place."
-          />
-          <AppShell onRefresh={onRefresh} storageMode={storageMode} />
-        </section>
-        <section id="customer" className="demo-section">
-          <DemoIntro
-            title="Customer Experience"
-            subtitle="Existing customers can book, confirm, and manage appointments online."
-          />
-          <CustomerDemo />
-        </section>
-        <section id="cards" className="demo-section">
-          <CardSetup onOpenStylist={() => openSection('stylist')} />
-        </section>
-        <section id="inbox" className="demo-section">
-          <DemoInbox
-            onOpenCustomer={() => openSection('customer')}
-            onOpenStylist={() => openSection('stylist')}
-          />
-        </section>
-        <section id="sms" className="demo-section">
-          <SmsPreview />
-        </section>
-      </main>
-      <footer className="demo-footer">
-        This is an interactive demonstration using fictional data. No real appointments, emails, or payments are processed.
-      </footer>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<DemoShell />}>
+          <Route index element={<Navigate to="/stylist" replace />} />
+          <Route path="stylist" element={<StylistPage><AppShell onRefresh={onRefresh} storageMode={storageMode} /></StylistPage>} />
+          <Route path="customer" element={<CustomerPage />} />
+          <Route path="messaging" element={<MessagingPage />} />
+          <Route path="*" element={<Navigate to="/stylist" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

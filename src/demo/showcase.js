@@ -13,7 +13,6 @@ export const SERVICE_PRICES = {
 }
 
 const SAVED_CARDS = {
-  'demo-client-emily': { brand: 'Visa', last4: '4242' },
   'demo-client-lauren': { brand: 'Mastercard', last4: '4444' },
   'demo-client-amanda': { brand: 'Visa', last4: '1881' },
   'demo-client-rachel': { brand: 'Visa', last4: '5100' },
@@ -28,21 +27,6 @@ export function decorateShowcaseClients(clients) {
 
 export function decorateShowcaseAppointments(appointments) {
   return appointments.map((appointment) => {
-    if (appointment.id === 'demo-appt-01') {
-      return {
-        ...appointment,
-        completedAt: '2026-11-16T14:00:00.000Z',
-        payment: {
-          status: 'requested',
-          amountCents: 6500,
-          tipCents: 0,
-          requestedAt: '2026-11-01T14:00:00.000Z',
-          paidAt: null,
-          brand: 'Visa',
-          last4: '4242',
-        },
-      }
-    }
     if (appointment.id === 'demo-appt-02') {
       return {
         ...appointment,

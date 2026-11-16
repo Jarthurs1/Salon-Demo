@@ -69,6 +69,12 @@ export function addMessage(message, storage) {
 }
 
 export function recordDemoMail(kind, appointment, extra = {}, storage) {
+  if (appointment?.id && (kind === 'paymentRequest' || kind === 'confirmed' || kind === 'confirmation')) {
+    const existing = read(storage).find((message) => (
+      message.kind === kind && message.actions?.some((action) => action.appointmentId === appointment.id)
+    ))
+    if (existing) return existing
+  }
   const name = appointment?.clientName || extra.clientName || 'there'
   const when = formatVisit(appointment?.date, appointment?.startTime)
   const requestedWhen = formatVisit(extra.requestedDate, extra.requestedTime)
@@ -85,8 +91,8 @@ export function recordDemoMail(kind, appointment, extra = {}, storage) {
     confirmation: {
       kind,
       to: name,
-      subject: `Confirm your appointment — ${salon}`,
-      body: `${name}, your ${service} on ${when} is pending. Confirm it when you are ready. Opening this message does not confirm the appointment.`,
+      subject: `Please Confirm Your Appointment — ${salon}`,
+      body: `Hi ${name.split(' ')[0]},\n\nPlease confirm your ${service} on ${when}.\n\nYou can also manage the appointment if you need a different time.`,
       actions: [{ id: 'confirm', label: 'Confirm Appointment', appointmentId: appointment?.id }],
     },
     reminder: {
@@ -128,7 +134,7 @@ export function recordDemoMail(kind, appointment, extra = {}, storage) {
       kind,
       to: name,
       subject: 'Thank You for Visiting Lumen & Co.',
-      body: `Hi ${name.split(' ')[0]},\n\nThank you for visiting ${salon}!\n\nYour appointment is complete. Please review your final service amount, add an optional tip, and confirm your payment.\n\n${service} on ${when}: ${extra.amount || ''}`,
+      body: `Hi ${name.split(' ')[0]},\n\nThank you for visiting ${salon}!\n\nPlease review your final service amount, add an optional tip, and approve your payment.\n\n${service} on ${when}: ${extra.amount || ''}`,
       actions: [{ id: 'pay', label: 'Review & Pay', appointmentId: appointment?.id }],
     },
     paymentReminder: {

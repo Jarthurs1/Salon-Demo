@@ -16,7 +16,9 @@ export function completionBlockReason(appointment, dollars) {
   }
   if (appointment.status === 'canceled') return 'This appointment is canceled.'
   if (appointment.status !== 'confirmed') return 'Confirm the appointment before marking it completed.'
-  if (appointment.payment?.status === 'paid') return 'This appointment is already paid.'
+  if (appointment.payment?.status === 'paid' || appointment.payment?.status === 'paid_outside') {
+    return 'This appointment is already paid.'
+  }
   if (appointment.payment?.status === 'requested') return 'Payment is already awaiting the customer.'
   if (!finalPriceCents(dollars)) return 'Enter a final price greater than zero.'
   return ''
@@ -103,4 +105,22 @@ export async function approveDemoPayment(id, tipCents) {
     tip: payment.tipCents ? money(payment.tipCents) : '',
   })
   return saved
+}
+
+export async function markPaidOutside(id) {
+  const current = getAppointmentById(id)
+  if (!current || current.type === 'blocked') return { ok: false, message: 'Choose an appointment.' }
+  if (current.status === 'canceled') return { ok: false, message: 'This appointment is canceled.' }
+  if (current.payment?.status === 'paid' || current.payment?.status === 'paid_outside') {
+    return { ok: false, message: 'This appointment is already paid.' }
+  }
+  const saved = await updateAppointment(id, {
+    ...current,
+    payment: {
+      ...(current.payment || {}),
+      status: 'paid_outside',
+      paidAt: new Date().toISOString(),
+    },
+  })
+  return { ok: true, appointment: saved }
 }
