@@ -40,7 +40,7 @@ export default function CardSetup() {
       <figure className="card-preview" aria-label="Simulated secure payment setup">
         <p className="card-preview__salon">Lumen & Co.</p>
         <h3>Secure card setup</h3>
-        <p className="card-preview__label">Simulated Stripe-style setup. No real card information is collected.</p>
+        <p className="card-preview__label">Sample checkout form. No real card number is collected.</p>
         <div className="card-preview__field">
           <span>Card number</span>
           <strong>•••• •••• •••• 4242</strong>

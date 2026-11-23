@@ -121,7 +121,7 @@ describe('demo navigation', () => {
     expect(DEMO_ROUTES.map(([, label]) => label)).toEqual([
       'Stylist Experience',
       'Customer Experience',
-      'Automated Messaging',
+      'Confirmations & messages',
     ])
     const seen = []
     const unsubscribe = subscribeCustomerFocus((value) => seen.push(value.mode))

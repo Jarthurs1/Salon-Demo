@@ -1,57 +1,73 @@
 import DemoIntro from './DemoIntro.jsx'
 
-const POINTS = [
-  ['Calendar', 'See the day at a glance, including confirmations and schedule changes.'],
-  ['Customers', 'Keep client details and saved-card status together.'],
-  ['Booking', 'Add appointments without a phone tag.'],
-  ['Blocked time', 'Protect lunch and days off so customers cannot book them.'],
-  ['Payments', 'Mark a finished visit complete and the payment request is created for you.'],
+const BENEFITS = [
+  ['See your day', 'Know who’s coming in and when.'],
+  ['Stay organized', 'Keep customer details and appointments together.'],
+  ['Handle changes', 'Approve reschedules without endless texts.'],
+  ['Get paid easily', 'Send customers a payment request automatically after their visit.'],
 ]
 
 export default function StylistPage({ children }) {
   return (
     <section className="demo-page">
       <DemoIntro
-        title="Stylist Experience"
-        subtitle="Your salon, organized in one place."
+        title="Everything you need to run your day"
+        subtitle="Your appointments, customers, and schedule changes — all in one simple app."
       />
-      <p className="demo-page__support">Manage appointments, customers, schedule changes, and payments from a simple mobile-friendly application.</p>
       <div className="stylist-layout">
         <aside className="stylist-copy">
-          <h3>What this saves</h3>
-          <p>Mara uses this during the day instead of checking texts, a paper book, and a separate payment app.</p>
-          <ul>
-            {POINTS.map(([title, text]) => (
-              <li key={title}><strong>{title}.</strong> {text}</li>
+          <ul className="benefit-list">
+            {BENEFITS.map(([title, text]) => (
+              <li key={title}>
+                <strong>{title}</strong>
+                <span>{text}</span>
+              </li>
             ))}
           </ul>
         </aside>
         <div className="stylist-stage">{children}</div>
       </div>
-      <div className="feature-grid">
-        <article className="feature-card">
-          <p className="feature-card__kicker">Concept preview</p>
-          <h3>AI Appointment Book Import</h3>
-          <p>Photograph your handwritten appointment book and let AI help convert it into a digital calendar.</p>
-          <ol className="feature-flow">
-            <li>Paper Calendar</li>
-            <li>AI Extraction</li>
-            <li>Digital Appointments</li>
-          </ol>
-          <p className="feature-card__note">The stylist reviews every extracted visit before it is imported. This preview does not upload a photo or run AI.</p>
-        </article>
-        <article className="feature-card">
-          <p className="feature-card__kicker">Concept preview</p>
-          <h3>AI Customer List Import</h3>
-          <p>Turn a photograph of your handwritten customer list into organized customer records.</p>
-          <ol className="feature-flow">
-            <li>Paper Client List</li>
-            <li>AI Extraction</li>
-            <li>Digital Customers</li>
-          </ol>
-          <p className="feature-card__note">The stylist checks names and contact details before saving them. This preview does not upload a photo or run AI.</p>
-        </article>
-      </div>
+      <section className="paper-section">
+        <h3>Already have a paper appointment book?</h3>
+        <p>Just take a photo. Simple Salon can help turn your handwritten appointments and customer details into your new digital calendar.</p>
+        <div className="paper-grid">
+          <article className="paper-card">
+            <div className="paper-preview" aria-hidden="true">
+              <div className="paper-note">
+                <span>Mon 9 — Emily</span>
+                <span>Tue 10 — Lauren</span>
+                <span>Wed 1 — Sarah</span>
+              </div>
+              <span className="paper-arrow">to</span>
+              <div className="paper-result">
+                <span>9:00 Emily</span>
+                <span>10:00 Lauren</span>
+                <span>1:00 Sarah</span>
+              </div>
+            </div>
+            <h4>Import your appointments</h4>
+            <p>Take a photo of your appointment book. Review the details before adding them to your calendar.</p>
+          </article>
+          <article className="paper-card">
+            <div className="paper-preview" aria-hidden="true">
+              <div className="paper-note">
+                <span>Emily 555-0142</span>
+                <span>Lauren 555-0188</span>
+                <span>Sarah 555-0164</span>
+              </div>
+              <span className="paper-arrow">to</span>
+              <div className="paper-result">
+                <span>Emily Carter</span>
+                <span>Lauren Mitchell</span>
+                <span>Sarah Bennett</span>
+              </div>
+            </div>
+            <h4>Import your customers</h4>
+            <p>Take a photo of your customer list. Review the names and phone numbers before saving.</p>
+          </article>
+        </div>
+        <p className="paper-section__note">You’re always in control. Review everything before saving.</p>
+      </section>
     </section>
   )
 }

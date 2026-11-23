@@ -83,8 +83,8 @@ export default function MessagingPage() {
 
   return (
     <section className="demo-page messaging-page">
-      <DemoIntro title="Automated Messaging" subtitle="Less chasing confirmations. More time styling." />
-      <p className="demo-page__support">Simple Salon automatically handles appointment reminders, confirmations, payment follow-ups, and daily stylist updates.</p>
+      <DemoIntro title="Confirmations and messages" subtitle="Less chasing confirmations. More time with clients." />
+      <p className="demo-page__support">Customers get a reminder automatically. When they confirm, change a time, or pay, Mara sees it without making a call.</p>
       <div className="demo-steps" role="tablist" aria-label="Message examples">
         {MESSAGING_PANELS.map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={panel === id} className={panel === id ? 'is-active' : ''} onClick={() => setParams({ panel: id })}>
@@ -126,7 +126,7 @@ export default function MessagingPage() {
           <h3>Please Confirm Your Appointment — Lumen & Co.</h3>
           <p>Hi Emily,</p>
           <p>Please confirm your {emily.service} on {formatVisit(emily.date, emily.startTime)}.</p>
-          <p>Automated reminders let customers confirm appointments without requiring the stylist to contact each person.</p>
+            <p>Customers can confirm from the reminder, so Mara does not have to text each person.</p>
           <div className="letter__actions">
             <button type="button" onClick={confirmFromMessage}>Confirm Appointment</button>
             <button type="button" onClick={() => openCustomer('manage')}>Manage Appointment</button>

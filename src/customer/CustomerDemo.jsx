@@ -261,7 +261,7 @@ export default function CustomerDemo({ step = 'book' }) {
               <p><strong>{selected.service}</strong></p>
               <p>{formatSelectedDate(parseDateKey(selected.date))} at {formatTimeDisplay(selected.startTime)}</p>
               {selected.rescheduleRequest?.status === 'pending' ? (
-                <p>Your reschedule request has been sent to your stylist. Your original appointment remains scheduled until the new time is approved.</p>
+                <p>Your request has been sent. Your original appointment stays on the calendar until your stylist approves the new time.</p>
               ) : null}
               {selected.status === 'canceled' ? <p>This appointment is canceled and the time is available again.</p> : null}
               {selected.status === 'pending' ? (
@@ -277,9 +277,9 @@ export default function CustomerDemo({ step = 'book' }) {
               <h2>Manage appointment</h2>
               <p>{selected.service} · {formatSelectedDate(parseDateKey(selected.date))} at {formatTimeDisplay(selected.startTime)}</p>
               {selected.rescheduleRequest?.status === 'pending' ? (
-                <p>Your reschedule request has been sent to your stylist. Your original appointment remains scheduled until the new time is approved.</p>
+                <p>Your request has been sent. Your original appointment stays on the calendar until your stylist approves the new time.</p>
               ) : (
-                <button type="button" className="btn" onClick={() => setMode('reschedule-date')}>Request Reschedule</button>
+                <button type="button" className="btn" onClick={() => setMode('reschedule-date')}>Ask to change your appointment</button>
               )}
               {selected.status !== 'canceled' ? (
                 <button type="button" className="btn btn--ghost" onClick={() => run(async () => {
@@ -303,11 +303,11 @@ export default function CustomerDemo({ step = 'book' }) {
                 onClick={() => run(async () => {
                   const result = await requestDemoReschedule(selected.id, dateKey, startTime)
                   if (result?.ok === false) return result
-                  setNotice('Your reschedule request has been sent to your stylist. Your original appointment remains scheduled until the new time is approved.')
+                  setNotice('Your request has been sent. Your original appointment stays on the calendar until your stylist approves the new time.')
                   return result
                 }, 'manage')}
               >
-                Submit reschedule request
+                Send request
               </button>
             </>
           ) : null}
@@ -327,7 +327,7 @@ export default function CustomerDemo({ step = 'book' }) {
           {selected?.payment?.status === 'paid' && mode === 'pay' ? (
             <>
               <h2>Payment complete</h2>
-              <p>{`${selected.service} is paid. Total ${money((selected.payment.amountCents || 0) + (selected.payment.tipCents || 0))}. A simulated receipt is in Automated Messaging.`}</p>
+              <p>{`${selected.service} is paid. Total ${money((selected.payment.amountCents || 0) + (selected.payment.tipCents || 0))}. A sample receipt is with the messages.`}</p>
             </>
           ) : null}
           {selected?.payment?.status === 'requested' && mode === 'pay' ? (

@@ -51,7 +51,7 @@ export default function DemoShell() {
       <div className="demo-lede">
         <p className="demo-lede__brand">Simple Salon</p>
         <p className="demo-lede__headline">Less administration. More time with clients.</p>
-        <p>Explore how independent stylists manage appointments while customers book, confirm, reschedule, and pay online.</p>
+        <p>See how a stylist runs the day while customers book, confirm, change a time, and pay.</p>
         <p className="demo-lede__note">Interactive demonstration using fictional data.</p>
       </div>
       <main className="demo-stage">

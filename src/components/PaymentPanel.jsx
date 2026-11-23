@@ -44,7 +44,7 @@ export default function PaymentPanel({ appointment }) {
       ) : null}
       {payment?.status === 'requested' ? (
         <>
-          <p>Awaiting Payment for {money(payment.amountCents)}. Emily can review it in Automated Messaging.</p>
+          <p>Awaiting Payment for {money(payment.amountCents)}. Emily can review it from Confirmations and messages.</p>
           <button
             type="button"
             className="form-btn form-btn--ghost"

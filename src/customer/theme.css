@@ -10,8 +10,9 @@
   --blush-soft: rgba(154, 107, 99, 0.12);
   --blush-deep: #7d564f;
   --white: #ffffff;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-display: 'DM Sans', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --accent: #8c5a52;
   --ease: 180ms ease;
   min-height: 100%;
   background: var(--ivory);
@@ -28,7 +29,7 @@
   padding: 0.85rem 1.35rem;
   border: 1px solid transparent;
   border-radius: 999px;
-  background: var(--espresso);
+  background: var(--accent);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -82,7 +83,7 @@
 }
 
 .customer-demo .tip-row button.is-selected {
-  background: var(--espresso);
+  background: var(--accent);
   color: #fff;
 }
 

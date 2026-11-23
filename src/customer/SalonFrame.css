@@ -21,8 +21,7 @@
   color: var(--terracotta);
   font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .salon-frame__name {

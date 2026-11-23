@@ -1,7 +1,7 @@
 export const DEMO_ROUTES = [
   ['/stylist', 'Stylist Experience'],
   ['/customer', 'Customer Experience'],
-  ['/messaging', 'Automated Messaging'],
+  ['/messaging', 'Confirmations & messages'],
 ]
 
 export const CUSTOMER_STEPS = [

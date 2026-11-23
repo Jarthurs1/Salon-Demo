@@ -16,9 +16,9 @@ export default function CustomerPage() {
     <section className="demo-page">
       <DemoIntro
         title="Customer Experience"
-        subtitle="Appointments made easy, from booking to payment."
+        subtitle="Book, confirm, and pay without calling the salon."
       />
-      <p className="demo-page__support">Emily Carter is the example customer at Lumen & Co. Her bookings, confirmations, and payments update Mara’s calendar.</p>
+      <p className="demo-page__support">Emily Carter is the example customer. What she does here shows up on Mara’s calendar.</p>
       <div className="demo-steps" role="tablist" aria-label="Customer steps">
         {CUSTOMER_STEPS.map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={step === id} className={step === id ? 'is-active' : ''} onClick={() => choose(id)}>
