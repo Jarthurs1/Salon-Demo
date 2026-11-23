@@ -3,7 +3,7 @@ import { decorateShowcaseAppointments, decorateShowcaseClients } from './showcas
 import { clearMailbox, listMessages, recordDemoMail } from './mailbox.js'
 import { assertDemoRequestAllowed } from './networkGuard.js'
 import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, requestDemoPayment, tipCentsFor } from './payments.js'
-import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment } from './inboxStories.js'
+import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment, findPayableAppointment } from './inboxStories.js'
 import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, reminderPhrase, statusFor } from './smsPreview.js'
 import { focusCustomerAppointment, peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from './focus.js'
 import { DEMO_ROUTES } from './sections.js'
@@ -48,6 +48,8 @@ describe('salon demo isolation', () => {
     expect(appointments.find((item) => item.id === 'demo-appt-01').payment).toBeUndefined()
     expect(appointments.find((item) => item.id === 'demo-appt-01').status).not.toBe('canceled')
     expect(appointments.find((item) => item.id === 'demo-appt-02').payment.status).toBe('requested')
+    expect(findPayableAppointment(appointments).id).toBe('demo-appt-02')
+    expect(findPayableAppointment([{ id: 'demo-appt-01', type: 'appointment' }]).id).toBe('demo-appt-01')
     expect(appointments.find((item) => item.id === 'demo-appt-03').status).toBe('pending')
     expect(appointments.find((item) => item.id === 'demo-appt-05').status).toBe('reschedule_requested')
     expect(appointments.find((item) => item.id === 'demo-appt-05').date).toBe('2026-11-18')

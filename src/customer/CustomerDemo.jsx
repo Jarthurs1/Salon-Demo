@@ -25,7 +25,7 @@ import {
 import { approveDemoPayment, tipCentsFor } from '../demo/payments.js'
 import { money } from '../demo/showcase.js'
 import { peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from '../demo/focus.js'
-import { EMILY_CLIENT_ID, EMILY_PAYMENT_APPOINTMENT_ID } from '../demo/inboxStories.js'
+import { EMILY_CLIENT_ID, EMILY_PAYMENT_APPOINTMENT_ID, findPayableAppointment } from '../demo/inboxStories.js'
 import './theme.css'
 import './BookingPage.css'
 
@@ -88,9 +88,18 @@ export default function CustomerDemo({ step = 'book' }) {
 
   useEffect(() => {
     if (focused.current || started.current === step || peekCustomerFocus()?.appointmentId) return
-    const emily = clients.find((item) => item.id === EMILY_CLIENT_ID)
-    if (!emily || !appointments.length) return
+    if (!appointments.length || !clients.length) return
     started.current = step
+    if (step === 'pay') {
+      const payable = findPayableAppointment(appointments)
+      if (!payable) return
+      setClientId(payable.clientId)
+      setAppointmentId(payable.id)
+      setMode('pay')
+      return
+    }
+    const emily = clients.find((item) => item.id === EMILY_CLIENT_ID)
+    if (!emily) return
     setClientId(emily.id)
     const featured = appointments.find((item) => item.id === EMILY_PAYMENT_APPOINTMENT_ID)
     if (featured) setAppointmentId(featured.id)
@@ -269,20 +278,9 @@ export default function CustomerDemo({ step = 'book' }) {
               {selected.status === 'pending' ? (
                 <button type="button" className="btn" onClick={() => run(() => confirmDemoAppointment(selected.id), 'manage')}>Confirm Appointment</button>
               ) : null}
-              {selected.status !== 'canceled' ? (
-                <button type="button" className="btn btn--ghost" onClick={() => setMode('manage-actions')}>Manage Appointment</button>
-              ) : null}
-            </>
-          ) : null}
-          {selected && mode === 'manage-actions' ? (
-            <>
-              <h2>Manage appointment</h2>
-              <p>{selected.service} · {formatSelectedDate(parseDateKey(selected.date))} at {formatTimeDisplay(selected.startTime)}</p>
-              {selected.rescheduleRequest?.status === 'pending' ? (
-                <p>Your request has been sent. Your original appointment stays on the calendar until your stylist approves the new time.</p>
-              ) : (
+              {selected.status !== 'canceled' && selected.rescheduleRequest?.status !== 'pending' ? (
                 <button type="button" className="btn" onClick={() => setMode('reschedule-date')}>Ask to change your appointment</button>
-              )}
+              ) : null}
               {selected.status !== 'canceled' ? (
                 <button type="button" className="btn btn--ghost" onClick={() => run(async () => {
                   const result = await cancelDemoAppointment(selected.id)

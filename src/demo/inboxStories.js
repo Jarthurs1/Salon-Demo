@@ -64,6 +64,11 @@ export function findEmilyPayment(appointments = []) {
   return appointments.find((item) => item.id === EMILY_PAYMENT_APPOINTMENT_ID) || null
 }
 
+export function findPayableAppointment(appointments = []) {
+  return appointments.find((item) => item.type !== 'blocked' && item.payment?.status === 'requested')
+    || findEmilyPayment(appointments)
+}
+
 export function emilyPaymentCopy(appointment) {
   const amount = money(appointment?.payment?.amountCents || 6500)
   const service = appointment?.service || 'Haircut'
