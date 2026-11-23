@@ -1111,10 +1111,10 @@
 
 .paper-preview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 0.45rem 0.35rem;
-  align-items: center;
-  margin-bottom: 0.7rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: stretch;
+  margin-bottom: 0.35rem;
 }
 
 .paper-side {
@@ -1127,58 +1127,38 @@
 .paper-label {
   margin: 0;
   color: var(--ink);
-  font-size: 0.68rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
   line-height: 1.25;
 }
 
-.paper-note,
-.paper-result {
-  display: grid;
-  gap: 0.28rem;
-  min-width: 0;
-  min-height: 5.4rem;
-  padding: 0.6rem 0.65rem;
-  border-radius: 0.75rem;
-  font-size: 0.78rem;
-  line-height: 1.35;
-}
-
 .paper-note {
-  background-color: #f7f1e8;
+  min-width: 0;
+  padding: 0 0.8rem 0 1.15rem;
+  border-radius: 0.35rem;
+  background-color: #fbf7ef;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,
-    transparent 1.28rem,
-    rgba(140, 90, 82, 0.18) 1.28rem,
-    rgba(140, 90, 82, 0.18) calc(1.28rem + 1px)
+    transparent calc(1.85rem - 1px),
+    rgba(90, 130, 180, 0.28) calc(1.85rem - 1px),
+    rgba(90, 130, 180, 0.28) 1.85rem
   );
-  color: #3d4f73;
-  font-family: "Segoe Script", "Segoe Print", "Bradley Hand", cursive;
-  font-style: normal;
+  box-shadow: inset 2px 0 0 #e7b7b7;
+  color: #243e66;
+  font-family: Caveat, "Segoe Script", "Segoe Print", cursive;
+  font-size: 1.35rem;
+  line-height: 1.85rem;
 }
 
-.paper-result {
-  background: #fff;
-  border: 1px solid #e4d8d2;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
+.paper-note p {
+  margin: 0;
+  height: 1.85rem;
+  line-height: 1.85rem;
 }
 
-.paper-result strong {
-  font-weight: 700;
-}
-
-.paper-record {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.05rem 0.4rem;
-  min-width: 0;
-}
-
-.paper-record span {
-  white-space: nowrap;
+.paper-note__date {
+  font-weight: 600;
 }
 
 .paper-arrow {
@@ -1188,18 +1168,63 @@
   background: currentColor;
   color: var(--muted);
   opacity: 0.7;
+  transform: rotate(90deg);
   clip-path: polygon(0 35%, 60% 35%, 60% 15%, 100% 50%, 60% 85%, 60% 65%, 0 65%);
 }
 
-@media (max-width: 419px) {
-  .paper-preview {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: stretch;
-  }
+.app-preview {
+  min-width: 0;
+  padding: 0.75rem 0.7rem 0.85rem;
+  border-radius: 1.1rem;
+  background: #faf7f5;
+  box-shadow: inset 0 0 0 1px rgba(44, 36, 34, 0.08);
+}
 
-  .paper-arrow {
-    transform: rotate(90deg);
-  }
+.app-preview .app-header {
+  margin-bottom: 0.55rem;
+}
+
+.app-preview .appointment-list__summary {
+  margin-bottom: 0.45rem;
+}
+
+.app-preview__cards,
+.app-preview .clients-view__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.app-preview .appointment-list,
+.app-preview .appointment-card,
+.app-preview .client-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-preview .appointment-card,
+.app-preview .client-card {
+  width: 100%;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+.app-preview .clients-view__search {
+  margin-bottom: 0.55rem;
+}
+
+.app-preview .appointment-card__time {
+  min-width: 3.15rem;
+}
+
+.app-preview .appointment-card__meta {
+  min-width: 0;
+  max-width: 5.4rem;
+}
+
+.app-preview .appointment-card__service {
+  white-space: normal;
 }
 
 .paper-section__note {
@@ -1242,7 +1267,13 @@
     border-radius: 1.7rem;
   }
 
-  .paper-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  .paper-preview {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.65rem 0.75rem;
+  }
+
+  .paper-arrow {
+    transform: none;
   }
 }
