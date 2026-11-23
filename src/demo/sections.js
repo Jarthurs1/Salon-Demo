@@ -7,7 +7,7 @@ export const DEMO_ROUTES = [
 export const CUSTOMER_STEPS = [
   ['book', 'Book Appointment'],
   ['manage', 'Manage Appointment'],
-  ['card', 'Save a Card'],
+  ['card', 'Save Payment Method'],
   ['pay', 'Complete Payment'],
 ]
 

@@ -201,7 +201,7 @@ export default function MessagingPage() {
         title="Messages"
         subtitle="Customers confirm and pay from their messages. You choose how reminders work."
       />
-      <div className="demo-steps" role="tablist" aria-label="Message examples">
+      <div className="demo-steps demo-steps--three" role="tablist" aria-label="Message examples">
         {MESSAGING_PANELS.map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={panel === id} className={panel === id ? 'is-active' : ''} onClick={() => setParams({ panel: id })}>
             {label}

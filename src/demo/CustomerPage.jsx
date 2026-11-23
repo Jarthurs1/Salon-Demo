@@ -25,7 +25,7 @@ export default function CustomerPage() {
         title="Customer Experience"
         subtitle="Book, change a time, and pay from the phone."
       />
-      <div className="demo-steps" role="tablist" aria-label="Customer steps">
+      <div className="demo-steps demo-steps--pair" role="tablist" aria-label="Customer steps">
         {CUSTOMER_STEPS.map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={step === id} className={step === id ? 'is-active' : ''} onClick={() => choose(id)}>
             {label}

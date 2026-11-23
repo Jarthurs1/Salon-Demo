@@ -6,7 +6,7 @@ import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, r
 import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment, findPayableAppointment } from './inboxStories.js'
 import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, reminderPhrase, statusFor } from './smsPreview.js'
 import { focusCustomerAppointment, peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from './focus.js'
-import { DEMO_ROUTES } from './sections.js'
+import { CUSTOMER_STEPS, DEMO_ROUTES } from './sections.js'
 
 function memoryStorage() {
   const values = new Map()
@@ -131,6 +131,7 @@ describe('demo navigation', () => {
       'Confirmations & messages',
     ])
     expect(DEMO_ROUTES.map((route) => route[2])).toEqual(['Stylist', 'Customer', 'Messaging'])
+    expect(CUSTOMER_STEPS.map(([, label]) => label)).toContain('Save Payment Method')
     expect(SMS_CONFIRMED).toBe('Thanks Emily! Your appointment is confirmed.')
     const seen = []
     const unsubscribe = subscribeCustomerFocus((value) => seen.push(value.mode))
