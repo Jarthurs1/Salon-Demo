@@ -41,19 +41,14 @@ export default function DemoShell() {
           </button>
         </div>
         <nav className="demo-chrome__nav" aria-label="Demo pages">
-          {DEMO_ROUTES.map(([path, label]) => (
+          {DEMO_ROUTES.map(([path, label, short]) => (
             <NavLink key={path} to={path} className={({ isActive }) => (isActive ? 'is-active' : undefined)}>
-              {label}
+              <span className="nav-long">{label}</span>
+              <span className="nav-short">{short}</span>
             </NavLink>
           ))}
         </nav>
       </header>
-      <div className="demo-lede">
-        <p className="demo-lede__brand">Simple Salon</p>
-        <p className="demo-lede__headline">Less administration. More time with clients.</p>
-        <p>See how a stylist runs the day while customers book, confirm, change a time, and pay.</p>
-        <p className="demo-lede__note">Interactive demonstration using fictional data.</p>
-      </div>
       <main className="demo-stage">
         <Outlet />
       </main>

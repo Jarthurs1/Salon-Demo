@@ -341,11 +341,12 @@ export default function AppointmentDetail({ appointment, onClose }) {
             </div>
             {decisionError ? <p role="alert">{decisionError}</p> : null}
             {contactOpen ? (
-              <div className="appointment-detail__draft">
-                <p>Simulated message to {client?.firstName || 'the customer'}. Nothing is sent.</p>
-                <p>
-                  Hi {client?.firstName || 'there'}, this is Mara at Lumen & Co. I saw your request to move your {appointment.service || 'appointment'} from {formatSelectedDate(parseDateKey(appointment.date))} at {formatTimeDisplay(appointment.startTime)} to {formatSelectedDate(parseDateKey(appointment.rescheduleRequest.date))} at {formatTimeDisplay(appointment.rescheduleRequest.startTime)}. Your original time stays reserved until I approve a new one.
+              <div className="appointment-detail__draft" aria-label="Simulated conversation">
+                <p className="contact-bubble contact-bubble--them">Can we find another time for my {appointment.service || 'appointment'}?</p>
+                <p className="contact-bubble contact-bubble--you">
+                  Hi {client?.firstName || 'there'}, this is Mara at Lumen & Co. I saw your request to move from {formatTimeDisplay(appointment.startTime)} to {formatTimeDisplay(appointment.rescheduleRequest.startTime)}. Your original time stays reserved until I approve a new one.
                 </p>
+                <p className="appointment-detail__draft-note">Simulated conversation. Nothing is sent.</p>
                 <button type="button" className="form-btn form-btn--ghost" onClick={() => setContactOpen(false)}>Close message</button>
               </div>
             ) : null}

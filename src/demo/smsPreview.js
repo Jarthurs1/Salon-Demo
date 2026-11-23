@@ -1,6 +1,6 @@
 export const SMS_YES = 'YES'
 
-export const SMS_CONFIRMED = 'Thanks Emily! Your appointment is confirmed. We look forward to seeing you!'
+export const SMS_CONFIRMED = 'Thanks Emily! Your appointment is confirmed.'
 
 export const SMS_RESCHEDULE_REPLY = "We've notified your stylist. Your original appointment remains scheduled until your stylist approves a new time."
 

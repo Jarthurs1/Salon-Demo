@@ -546,7 +546,7 @@ export default function SettingsSheet({ onClose }) {
 
           {isDemo ? (
             <p className="settings-sheet__notice" role="status">
-              These are Mara’s reminder settings. Automated Confirmations uses this same choice. Nothing is sent.
+              Choose how and when your customers receive automatic reminders. Messages uses this same choice. Nothing is sent.
             </p>
           ) : smsSelected && !smsLive ? (
             <p className="settings-sheet__notice" role="status">

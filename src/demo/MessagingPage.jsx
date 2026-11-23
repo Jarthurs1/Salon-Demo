@@ -86,7 +86,13 @@ export default function MessagingPage() {
   const schedule = useScheduleSettings()
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
-  const panel = MESSAGING_PANELS.some(([id]) => id === params.get('panel')) ? params.get('panel') : 'sms'
+  const requested = params.get('panel')
+  const panel = requested === 'sms' || requested === 'email'
+    ? 'confirmations'
+    : MESSAGING_PANELS.some(([id]) => id === requested)
+      ? requested
+      : 'confirmations'
+  const [channel, setChannel] = useState(requested === 'email' ? 'email' : 'text')
   const emily = findEmilyPayment(appointments)
   const payable = appointments.find((item) => item.payment?.status === 'requested')
     || appointments.find((item) => item.payment?.status === 'paid' || item.payment?.status === 'paid_outside')
@@ -186,13 +192,14 @@ export default function MessagingPage() {
 
   const timingNote = reminders?.method === 'none'
     ? 'Appointment reminders are turned off.'
-    : `This preview follows Mara’s schedule: ${scheduleLabel}.`
+    : `Showing the ${scheduleLabel} reminder.`
+  const visibleChannel = !showSms ? 'email' : !showEmail ? 'text' : channel
 
   return (
     <section className="demo-page messaging-page">
       <DemoIntro
-        title="Automated Confirmations & Reminders"
-        subtitle="Your customers get timely reminders, and your calendar stays up to date — without you having to chase anyone."
+        title="Messages"
+        subtitle="Customers confirm and pay from their messages. You choose how reminders work."
       />
       <div className="demo-steps" role="tablist" aria-label="Message examples">
         {MESSAGING_PANELS.map(([id, label]) => (
@@ -204,132 +211,130 @@ export default function MessagingPage() {
       {notice ? <p className="demo-page__status" role="status">{notice}</p> : null}
       {error ? <p className="demo-page__status" role="alert">{error}</p> : null}
 
-      <form className="settings-preview" onSubmit={(event) => event.preventDefault()}>
-        <h3>Stylist Reminder Settings</h3>
-        <p>Mara chooses how and when Simple Salon reminds her customers. Once set, reminders happen automatically.</p>
-        <fieldset>
-          <legend>Notification Method</legend>
-          <div className="settings-preview__choices">
-            {METHODS.map(([id, label]) => (
-              <label key={id}>
-                <input type="radio" name="reminder-method" value={id} checked={reminders?.method === id} onChange={() => changeMethod(id)} />
-                {label}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <fieldset disabled={reminders?.method === 'none'}>
-          <legend>Reminder Timing</legend>
-          <div className="settings-preview__choices">
-            {REMINDER_INTERVAL_OPTIONS.map((day) => (
-              <label key={day}>
-                <input
-                  type="checkbox"
-                  checked={(reminders?.intervalsDays || []).includes(day)}
-                  onChange={(event) => changeTiming(day, event.target.checked)}
+      {panel === 'confirmations' ? (
+        <div className="message-stack">
+          {reminders?.method === 'none' ? (
+            <ReminderOff>Appointment reminders are off. Turn SMS, Email, or Both back on below.</ReminderOff>
+          ) : (
+            <>
+              {showSms && showEmail ? (
+                <SwitchRow
+                  label="Confirmation examples"
+                  value={visibleChannel}
+                  onChange={setChannel}
+                  options={[['text', 'Text'], ['email', 'Email']]}
                 />
-                {TIMING_LABELS[day]}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <p className="feature-card__note">{timingNote} The same choices are in the stylist app’s Settings. Nothing is sent.</p>
-      </form>
-
-      {panel === 'sms' ? (
-        showSms ? (
-          <div className="message-layout">
-            <div className="sms-phone">
-              <header className="sms-phone__top">
-                <span className="sms-phone__avatar" aria-hidden="true">L</span>
-                <div>
-                  <p>Lumen & Co.</p>
-                  <span>Text Message</span>
-                </div>
-              </header>
-              <div className="sms-thread" aria-live="polite">
-                <p className="sms-time">{phrase}</p>
-                {messages.map((message) => (
-                  <p key={`${message.from}-${message.text}`} className={`sms-bubble sms-bubble--${message.from}`}>
-                    {message.text}
-                    {message.manage ? (
-                      <button type="button" className="sms-link" onClick={() => openCustomer('manage')}>
-                        Manage appointment
-                      </button>
-                    ) : null}
-                  </p>
+              ) : null}
+              {visibleChannel === 'text' ? (
+                <>
+                  <p className="try-it"><strong>Try it:</strong> Reply YES to confirm Emily’s appointment.</p>
+                  <div className="sms-phone">
+                    <header className="sms-phone__top">
+                      <span className="sms-phone__avatar" aria-hidden="true">L</span>
+                      <div>
+                        <p>Lumen & Co.</p>
+                        <span>Text Message</span>
+                      </div>
+                    </header>
+                    <div className="sms-thread" aria-live="polite">
+                      <p className="sms-time">{phrase}</p>
+                      {messages.map((message) => (
+                        <p key={`${message.from}-${message.text}`} className={`sms-bubble sms-bubble--${message.from}`}>
+                          {message.text}
+                          {message.manage ? (
+                            <button type="button" className="sms-link" onClick={() => openCustomer('manage')}>
+                              Manage appointment
+                            </button>
+                          ) : null}
+                        </p>
+                      ))}
+                    </div>
+                    <form className="sms-composer" onSubmit={sendDraft}>
+                      <button type="button" className="sms-chip" onClick={confirmFromMessage} disabled={!canConfirm}>YES</button>
+                      <input
+                        aria-label="Text Message"
+                        placeholder="Text Message"
+                        value={draft}
+                        disabled={!canConfirm}
+                        onChange={(event) => setDraft(event.target.value)}
+                      />
+                      <button type="submit" aria-label="Send" disabled={!canConfirm}>Send</button>
+                    </form>
+                  </div>
+                </>
+              ) : emily ? (
+                <>
+                  <p className="try-it"><strong>Try it:</strong> Confirm the appointment or open Manage Appointment.</p>
+                  <SwitchRow
+                    label="Email examples"
+                    value={emailKind}
+                    onChange={setEmailKind}
+                    options={[['confirm', 'Confirmation'], ['reminder', 'Reminder']]}
+                  />
+                  <MailPreview
+                    from="Lumen & Co."
+                    to="Emily Carter"
+                    subject={emailKind === 'reminder' ? 'Appointment Reminder — Lumen & Co.' : 'Please Confirm Your Appointment — Lumen & Co.'}
+                    date={visitDate}
+                    actions={(
+                      <>
+                        <button type="button" onClick={confirmFromMessage}>Confirm Appointment</button>
+                        <button type="button" className="is-quiet" onClick={() => openCustomer('manage')}>Manage Appointment</button>
+                      </>
+                    )}
+                  >
+                    <p>Hi Emily,</p>
+                    <p>This is a reminder about your upcoming appointment.</p>
+                    <p><strong>Service:</strong> {emily.service}</p>
+                    <p><strong>Date:</strong> {visitDate}</p>
+                    <p><strong>Time:</strong> {visitTime(emily)}</p>
+                    <p><strong>Stylist:</strong> {stylist}</p>
+                    <p>We look forward to seeing you!</p>
+                  </MailPreview>
+                </>
+              ) : null}
+            </>
+          )}
+          <form className="settings-preview" onSubmit={(event) => event.preventDefault()}>
+            <p className="try-it"><strong>Try it:</strong> Change when and how customers receive reminders.</p>
+            <h3>Stylist Reminder Settings</h3>
+            <p>Choose how and when your customers receive automatic reminders.</p>
+            <fieldset>
+              <legend>Notification Method</legend>
+              <div className="settings-preview__choices">
+                {METHODS.map(([id, label]) => (
+                  <label key={id}>
+                    <input type="radio" name="reminder-method" value={id} checked={reminders?.method === id} onChange={() => changeMethod(id)} />
+                    {label}
+                  </label>
                 ))}
               </div>
-              <form className="sms-composer" onSubmit={sendDraft}>
-                <button type="button" className="sms-chip" onClick={confirmFromMessage} disabled={!canConfirm}>
-                  YES
-                </button>
-                <input
-                  aria-label="Text Message"
-                  placeholder="Text Message"
-                  value={draft}
-                  disabled={!canConfirm}
-                  onChange={(event) => setDraft(event.target.value)}
-                />
-                <button type="submit" aria-label="Send" disabled={!canConfirm}>Send</button>
-              </form>
-            </div>
-            <aside>
-              <p>Emily can reply YES or tap YES. Mara sees Confirmed on her calendar. Manage appointment opens Emily’s appointment, where she can cancel or ask for a different time.</p>
-              <p className="feature-card__note">These are simulated messages. Nothing is sent to a phone.</p>
-            </aside>
-          </div>
-        ) : (
-          <ReminderOff>
-            {reminders?.method === 'none'
-              ? 'Text reminders are off. Mara can turn SMS or Both back on above.'
-              : 'Mara sends appointment reminders by email. Text reminders are off.'}
-          </ReminderOff>
-        )
-      ) : null}
-
-      {panel === 'email' ? (
-        showEmail && emily ? (
-          <div className="message-stack">
-            <SwitchRow
-              label="Email examples"
-              value={emailKind}
-              onChange={setEmailKind}
-              options={[['confirm', 'Confirmation'], ['reminder', 'Reminder']]}
-            />
-            <p className="feature-card__note">Customers confirm from the email, so Mara does not have to text each person.</p>
-            <MailPreview
-              from="Lumen & Co."
-              to="Emily Carter"
-              subject={emailKind === 'reminder' ? 'Appointment Reminder — Lumen & Co.' : 'Please Confirm Your Appointment — Lumen & Co.'}
-              date={visitDate}
-              actions={(
-                <>
-                  <button type="button" onClick={confirmFromMessage}>Confirm Appointment</button>
-                  <button type="button" className="is-quiet" onClick={() => openCustomer('manage')}>Manage Appointment</button>
-                </>
-              )}
-            >
-              <p>Hi Emily,</p>
-              <p>This is a reminder about your upcoming appointment.</p>
-              <p><strong>Service:</strong> {emily.service}</p>
-              <p><strong>Date:</strong> {visitDate}</p>
-              <p><strong>Time:</strong> {visitTime(emily)}</p>
-              <p><strong>Stylist:</strong> {stylist}</p>
-              <p>We look forward to seeing you!</p>
-            </MailPreview>
-          </div>
-        ) : (
-          <ReminderOff>
-            {reminders?.method === 'none'
-              ? 'Email reminders are off. Mara can turn Email or Both back on above.'
-              : 'Mara sends appointment reminders by text. Email reminders are off.'}
-          </ReminderOff>
-        )
+            </fieldset>
+            <fieldset disabled={reminders?.method === 'none'}>
+              <legend>Reminder Timing</legend>
+              <div className="settings-preview__choices">
+                {REMINDER_INTERVAL_OPTIONS.map((day) => (
+                  <label key={day}>
+                    <input
+                      type="checkbox"
+                      checked={(reminders?.intervalsDays || []).includes(day)}
+                      onChange={(event) => changeTiming(day, event.target.checked)}
+                    />
+                    {TIMING_LABELS[day]}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <p className="feature-card__note">{timingNote} The stylist app’s Settings uses this same choice. Nothing is sent.</p>
+          </form>
+        </div>
       ) : null}
 
       {panel === 'payments' && payable ? (
         <div className="message-stack">
+          <h3 className="message-heading">Get paid without chasing customers</h3>
+          <p className="message-lead">After an appointment, your customer automatically receives a payment request and can add a tip.</p>
+          <p className="try-it"><strong>Try it:</strong> Open Review & Pay, add a tip, and approve the payment.</p>
           <SwitchRow
             label="Payment emails"
             value={paymentKind}
@@ -400,7 +405,7 @@ export default function MessagingPage() {
 
       {panel === 'daily' ? (
         <div className="message-stack">
-          <p className="feature-card__note">Delivered at 8 AM so Mara can prepare for the day. This is a sample of that briefing.</p>
+          <p className="try-it"><strong>Try it:</strong> Open Mara’s calendar from her morning email.</p>
           <MailPreview
             from="Lumen & Co."
             to={`${stylist} · Lumen & Co.`}

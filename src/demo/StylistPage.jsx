@@ -1,35 +1,16 @@
 import DemoIntro from './DemoIntro.jsx'
 
-const BENEFITS = [
-  ['See your day', 'Know who’s coming in and when.'],
-  ['Stay organized', 'Keep customer details and appointments together.'],
-  ['Handle changes', 'Approve reschedules without endless texts.'],
-  ['Get paid easily', 'Send customers a payment request automatically after their visit.'],
-]
-
 export default function StylistPage({ children }) {
   return (
     <section className="demo-page">
       <DemoIntro
         title="Everything you need to run your day"
-        subtitle="Your appointments, customers, and schedule changes — all in one simple app."
+        subtitle="Manage appointments, customers, and schedule changes in one simple app."
       />
-      <div className="stylist-layout">
-        <aside className="stylist-copy">
-          <ul className="benefit-list">
-            {BENEFITS.map(([title, text]) => (
-              <li key={title}>
-                <strong>{title}</strong>
-                <span>{text}</span>
-              </li>
-            ))}
-          </ul>
-        </aside>
-        <div className="stylist-stage">{children}</div>
-      </div>
+      <p className="try-it"><strong>Try it:</strong> Tap an empty time to book, or an appointment to manage it.</p>
+      <div className="stylist-stage">{children}</div>
       <section className="paper-section">
-        <h3>Already have a paper appointment book?</h3>
-        <p>Just take a photo. Simple Salon can help turn your handwritten appointments and customer details into your new digital calendar.</p>
+        <p className="try-it"><strong>Try it:</strong> See how handwritten appointments become a digital calendar.</p>
         <div className="paper-grid">
           <article className="paper-card">
             <div className="paper-preview">
@@ -51,8 +32,6 @@ export default function StylistPage({ children }) {
                 </div>
               </div>
             </div>
-            <h4>Import your appointments</h4>
-            <p>Take a photo of your appointment book. Review the details before adding them to your calendar.</p>
           </article>
           <article className="paper-card">
             <div className="paper-preview">
@@ -74,11 +53,8 @@ export default function StylistPage({ children }) {
                 </div>
               </div>
             </div>
-            <h4>Import your customers</h4>
-            <p>Take a photo of your customer list. Review the names and phone numbers before saving.</p>
           </article>
         </div>
-        <p className="paper-section__note">You’re always in control. Review everything before saving.</p>
       </section>
     </section>
   )

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { completeDemoAppointment, markPaidOutside } from '../demo/payments.js'
 import { money, SERVICE_PRICES } from '../demo/showcase.js'
+import { getClientById } from '../services/clientRepository.js'
 
 export default function PaymentPanel({ appointment }) {
   const suggested = SERVICE_PRICES[appointment.service] || 7500
@@ -8,6 +9,8 @@ export default function PaymentPanel({ appointment }) {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const payment = appointment.payment
+  const savedCard = getClientById(appointment.clientId)?.savedCard
+  const hasCard = Boolean(savedCard || payment?.last4)
   const blocked = appointment.type === 'blocked' || appointment.status === 'canceled'
   const rescheduleOpen = appointment.status === 'reschedule_requested'
     || appointment.rescheduleRequest?.status === 'pending'
@@ -44,7 +47,8 @@ export default function PaymentPanel({ appointment }) {
       ) : null}
       {payment?.status === 'requested' ? (
         <>
-          <p>Awaiting Payment for {money(payment.amountCents)}. Emily can review it from Confirmations and messages.</p>
+          <p>Payment request sent for {money(payment.amountCents)}. The customer can add a tip and approve it.</p>
+          {hasCard ? null : <p>No payment method is saved. Collect payment in person, or have the customer save one.</p>}
           <button
             type="button"
             className="form-btn form-btn--ghost"

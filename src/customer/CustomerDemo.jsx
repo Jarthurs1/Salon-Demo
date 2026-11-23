@@ -337,7 +337,7 @@ export default function CustomerDemo({ step = 'book' }) {
               <h2>Thank you for visiting Lumen & Co.!</h2>
               <p>Please review your final service amount, add an optional tip, and confirm your payment.</p>
               <p>{selected.service} · {money(selected.payment.amountCents)}</p>
-              <p>{client?.savedCard ? `Fictional saved card ${client.savedCard.brand} ···· ${client.savedCard.last4}` : 'No card is saved. Approve & Pay uses a simulated card and does not collect a real card number.'}</p>
+              <p>{client?.savedCard ? `Fictional saved card ${client.savedCard.brand} ···· ${client.savedCard.last4}` : 'No payment method is saved. Save one, or collect this payment in person. Approval here stays simulated.'}</p>
               <div className="tip-row">
                 {TIP_CHOICES.map((choice) => (
                   <button key={choice.id} type="button" className={choice.id === tipChoice ? 'is-selected' : ''} onClick={() => setTipChoice(choice.id)}>

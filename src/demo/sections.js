@@ -1,7 +1,7 @@
 export const DEMO_ROUTES = [
-  ['/stylist', 'Stylist Experience'],
-  ['/customer', 'Customer Experience'],
-  ['/messaging', 'Confirmations & messages'],
+  ['/stylist', 'Stylist Experience', 'Stylist'],
+  ['/customer', 'Customer Experience', 'Customer'],
+  ['/messaging', 'Confirmations & messages', 'Messaging'],
 ]
 
 export const CUSTOMER_STEPS = [
@@ -12,8 +12,7 @@ export const CUSTOMER_STEPS = [
 ]
 
 export const MESSAGING_PANELS = [
-  ['sms', 'Text Messages'],
-  ['email', 'Emails'],
+  ['confirmations', 'Appointment Confirmations'],
   ['payments', 'Payment Notifications'],
   ['daily', 'Daily Stylist Email'],
 ]

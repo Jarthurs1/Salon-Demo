@@ -128,6 +128,8 @@ describe('demo navigation', () => {
       'Customer Experience',
       'Confirmations & messages',
     ])
+    expect(DEMO_ROUTES.map((route) => route[2])).toEqual(['Stylist', 'Customer', 'Messaging'])
+    expect(SMS_CONFIRMED).toBe('Thanks Emily! Your appointment is confirmed.')
     const seen = []
     const unsubscribe = subscribeCustomerFocus((value) => seen.push(value.mode))
     focusCustomerAppointment('demo-appt-01', 'pay')

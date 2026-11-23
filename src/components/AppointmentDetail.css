@@ -180,6 +180,32 @@
   line-height: 1.4;
 }
 
+.contact-bubble {
+  width: fit-content;
+  max-width: 92%;
+  padding: 0.45rem 0.7rem;
+  border-radius: 1rem;
+  line-height: 1.35;
+}
+
+.contact-bubble--them {
+  background: #e9e9eb;
+  color: #1c1c1e;
+  border-bottom-left-radius: 0.3rem;
+}
+
+.contact-bubble--you {
+  justify-self: end;
+  background: #34c759;
+  color: #fff;
+  border-bottom-right-radius: 0.3rem;
+}
+
+.appointment-detail__draft-note {
+  color: #6f615b;
+  font-size: 0.82rem;
+}
+
 .appointment-detail__request-actions {
   display: flex;
   flex-wrap: wrap;
