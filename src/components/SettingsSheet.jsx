@@ -546,8 +546,7 @@ export default function SettingsSheet({ onClose }) {
 
           {isDemo ? (
             <p className="settings-sheet__notice" role="status">
-              Reminder delivery (email and SMS) is disabled for the demonstration
-              account. You can still explore these settings; nothing is sent.
+              These are Mara’s reminder settings. Automated Confirmations uses this same choice. Nothing is sent.
             </p>
           ) : smsSelected && !smsLive ? (
             <p className="settings-sheet__notice" role="status">

@@ -4,7 +4,7 @@ import { clearMailbox, listMessages, recordDemoMail } from './mailbox.js'
 import { assertDemoRequestAllowed } from './networkGuard.js'
 import { approveDemoPayment, completionBlockReason, paymentFollowsElapsedTime, requestDemoPayment, tipCentsFor } from './payments.js'
 import { buildDayBriefing, buildFollowUpDigest, emilyPaymentCopy, findEmilyPayment } from './inboxStories.js'
-import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, statusFor } from './smsPreview.js'
+import { SMS_CONFIRMED, SMS_RESCHEDULE_REPLY, messagesFor, reminderPhrase, statusFor } from './smsPreview.js'
 import { focusCustomerAppointment, peekCustomerFocus, subscribeCustomerFocus, takeCustomerFocus } from './focus.js'
 import { DEMO_ROUTES } from './sections.js'
 
@@ -106,11 +106,16 @@ describe('salon demo isolation', () => {
 
 describe('sms preview', () => {
   it('confirms with YES and keeps a reschedule on the original time', () => {
-    expect(messagesFor('start')[0].text).toContain('Please confirm your appointment')
+    expect(messagesFor('start')[0].text).toContain('tomorrow at 9:00 AM')
+    expect(messagesFor('start')[1].text).toContain('Reply YES to confirm')
+    expect(messagesFor('start', 'in 2 days at 9:00 AM')[0].text).toContain('in 2 days')
     expect(messagesFor('yes-wait').map((item) => item.text)).toContain('YES')
     expect(statusFor('yes-wait')).toBe('pending')
     expect(messagesFor('yes-done').at(-1).text).toBe(SMS_CONFIRMED)
     expect(statusFor('yes-done')).toBe('confirmed')
+    expect(reminderPhrase([1], '9:00 AM')).toBe('tomorrow at 9:00 AM')
+    expect(reminderPhrase([2], '9:00 AM')).toBe('in 2 days at 9:00 AM')
+    expect(reminderPhrase([2, 7], '9:00 AM')).toBe('in 2 days at 9:00 AM')
     expect(SMS_RESCHEDULE_REPLY).toMatch(/stylist approves/)
     expect(SMS_RESCHEDULE_REPLY).not.toMatch(/twilio|execute-api|sms\./i)
   })

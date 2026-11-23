@@ -59,6 +59,7 @@ export default function CustomerDemo({ step = 'book' }) {
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
   const started = useRef('')
+  const focused = useRef(false)
   const today = useMemo(() => startOfDay(new Date()), [])
   const tomorrow = useMemo(() => addDays(today, 1), [today])
   const horizon = useMemo(() => addDays(today, 90), [today])
@@ -78,6 +79,7 @@ export default function CustomerDemo({ step = 'book' }) {
       setClientId(match.clientId)
       setAppointmentId(match.id)
       setMode(focus.mode === 'pay' ? 'pay' : 'manage')
+      focused.current = true
       takeCustomerFocus()
     }
     apply(peekCustomerFocus())
@@ -85,7 +87,7 @@ export default function CustomerDemo({ step = 'book' }) {
   }, [appointments])
 
   useEffect(() => {
-    if (started.current === step || peekCustomerFocus()?.appointmentId) return
+    if (focused.current || started.current === step || peekCustomerFocus()?.appointmentId) return
     const emily = clients.find((item) => item.id === EMILY_CLIENT_ID)
     if (!emily || !appointments.length) return
     started.current = step

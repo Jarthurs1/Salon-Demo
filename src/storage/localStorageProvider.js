@@ -58,6 +58,11 @@ function defaultSettingsEnvelope() {
       contactPhone: '555-014-2200',
     },
     blackoutDates: [],
+    reminders: {
+      enabled: true,
+      method: 'both',
+      intervalsDays: [1],
+    },
   }
 }
 

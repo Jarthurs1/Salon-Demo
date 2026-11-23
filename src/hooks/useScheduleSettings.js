@@ -17,3 +17,13 @@ export function useScheduleSettings() {
   )
   return envelope.schedule
 }
+
+/** The same reminder settings the stylist saves in Settings. */
+export function useReminderSettings() {
+  const envelope = useSyncExternalStore(
+    subscribeSettings,
+    getSnapshot,
+    getSnapshot,
+  )
+  return envelope.reminders
+}

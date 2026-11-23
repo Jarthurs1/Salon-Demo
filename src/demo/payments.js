@@ -54,8 +54,15 @@ export async function completeDemoAppointment(id, dollars) {
 
 export async function previewPaymentReminder(id, which) {
   const current = getAppointmentById(id)
-  if (!current || current.payment?.status !== 'requested') {
-    return { ok: false, message: 'Reminders stop once the payment is complete.' }
+  const status = current?.payment?.status
+  if (!current || status !== 'requested') {
+    const finished = status === 'paid' || status === 'paid_outside'
+    return {
+      ok: false,
+      message: finished
+        ? 'Reminders stop once the payment is complete.'
+        : 'This reminder is sent after the visit is completed and payment is requested.',
+    }
   }
   recordDemoMail('paymentReminder', current, {
     hours: which === '72h' ? '72 hours' : '24 hours',

@@ -12,8 +12,8 @@ export const CUSTOMER_STEPS = [
 ]
 
 export const MESSAGING_PANELS = [
-  ['sms', 'SMS Confirmations'],
-  ['email', 'Email Confirmations'],
-  ['payments', 'Payment Emails'],
-  ['daily', 'Stylist Daily Email'],
+  ['sms', 'Text Messages'],
+  ['email', 'Emails'],
+  ['payments', 'Payment Notifications'],
+  ['daily', 'Daily Stylist Email'],
 ]
