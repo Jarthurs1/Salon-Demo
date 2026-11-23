@@ -35,9 +35,9 @@ export default function DemoShell() {
     <div className="demo-root">
       <header className="demo-chrome">
         <div className="demo-chrome__row">
-          <p className="demo-chrome__title">Salon Demo</p>
+          <p className="demo-chrome__title">Simple Salon</p>
           <button type="button" className="demo-chrome__reset" onClick={() => setConfirming(true)}>
-            Reset Demo Data
+            Reset Demo
           </button>
         </div>
         <nav className="demo-chrome__nav" aria-label="Demo pages">
