@@ -108,11 +108,14 @@ describe('salon demo isolation', () => {
 
 describe('sms preview', () => {
   it('confirms with YES and keeps a reschedule on the original time', () => {
-    expect(messagesFor('start')[0].text).toContain('tomorrow at 9:00 AM')
-    expect(messagesFor('start')[1].text).toContain('Reply YES to confirm')
-    expect(messagesFor('start', 'in 2 days at 9:00 AM')[0].text).toContain('in 2 days')
+    expect(messagesFor('start')).toHaveLength(1)
+    expect(messagesFor('start')[0].actions).toBe(true)
+    expect(messagesFor('start')[0].text).toBe('Hi Emily! Just a reminder that your haircut is tomorrow at 9:00 AM. Reply YES to confirm, or manage your appointment using the link below.')
+    expect(messagesFor('start', 'in 2 days at 9:00 AM', 'reminder')[0].text).toContain('automatic reminder')
+    expect(messagesFor('start', 'in 2 days at 9:00 AM', 'reminder')[0].text).toContain('in 2 days')
     expect(messagesFor('yes-wait').map((item) => item.text)).toContain('YES')
     expect(statusFor('yes-wait')).toBe('pending')
+    expect(messagesFor('yes-done').filter((item) => item.text === SMS_CONFIRMED)).toHaveLength(1)
     expect(messagesFor('yes-done').at(-1).text).toBe(SMS_CONFIRMED)
     expect(statusFor('yes-done')).toBe('confirmed')
     expect(reminderPhrase([1], '9:00 AM')).toBe('tomorrow at 9:00 AM')
@@ -132,7 +135,7 @@ describe('demo navigation', () => {
     ])
     expect(DEMO_ROUTES.map((route) => route[2])).toEqual(['Stylist', 'Customer', 'Messaging'])
     expect(CUSTOMER_STEPS.map(([, label]) => label)).toContain('Save Payment Method')
-    expect(SMS_CONFIRMED).toBe('Thanks Emily! Your appointment is confirmed.')
+    expect(SMS_CONFIRMED).toBe('Thanks Emily! Your appointment is confirmed. See you tomorrow!')
     const seen = []
     const unsubscribe = subscribeCustomerFocus((value) => seen.push(value.mode))
     focusCustomerAppointment('demo-appt-01', 'pay')

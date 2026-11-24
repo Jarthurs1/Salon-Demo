@@ -15,8 +15,6 @@ import {
 import { previewPaymentReminder } from './payments.js'
 import {
   REMINDER_INTERVAL_OPTIONS,
-  methodWantsEmail,
-  methodWantsSms,
   reminderSettingsAreValid,
   toggleReminderInterval,
 } from '../reminders/reminderSettings.js'
@@ -105,9 +103,8 @@ export default function MessagingPage() {
   const [reminderHours, setReminderHours] = useState('24 hours')
   const stylist = schedule?.stylistName || 'Mara'
   const phrase = reminderPhrase(reminders?.intervalsDays, emily ? visitTime(emily) : '9:00 AM')
-  const messages = conversationFor(emily?.status, phrase)
-  const showSms = methodWantsSms(reminders?.method)
-  const showEmail = methodWantsEmail(reminders?.method)
+  const messageKind = emailKind === 'reminder' ? 'reminder' : 'confirm'
+  const messages = conversationFor(emily?.status, phrase, messageKind)
   const canConfirm = emily?.status === 'pending'
   const visitDate = emily ? formatVisit(emily.date, '').replace(/ at $/, '') : 'the appointment day'
   const visitWhen = emily ? formatVisit(emily.date, emily.startTime) : 'the scheduled time'
@@ -193,7 +190,7 @@ export default function MessagingPage() {
   const timingNote = reminders?.method === 'none'
     ? 'Appointment reminders are turned off.'
     : `Showing the ${scheduleLabel} reminder.`
-  const visibleChannel = !showSms ? 'email' : !showEmail ? 'text' : channel
+  const visibleChannel = channel === 'email' ? 'email' : 'text'
 
   return (
     <section className="demo-page messaging-page">
@@ -217,48 +214,59 @@ export default function MessagingPage() {
             <ReminderOff>Appointment reminders are off. Turn SMS, Email, or Both back on below.</ReminderOff>
           ) : (
             <>
-              {showSms && showEmail ? (
-                <SwitchRow
-                  label="Confirmation examples"
-                  value={visibleChannel}
-                  onChange={setChannel}
-                  options={[['text', 'Text'], ['email', 'Email']]}
-                />
-              ) : null}
+              <SwitchRow
+                label="Message examples"
+                value={visibleChannel}
+                onChange={setChannel}
+                options={[['text', 'Text'], ['email', 'Email']]}
+              />
               {visibleChannel === 'text' ? (
                 <>
-                  <p className="try-it"><strong>Try it:</strong> Reply YES to confirm Emily’s appointment.</p>
+                  <p className="try-it"><strong>Try it:</strong> Tap Confirm Appointment, or reply YES.</p>
+                  <SwitchRow
+                    label="Text examples"
+                    value={emailKind}
+                    onChange={setEmailKind}
+                    options={[['confirm', 'Confirmation'], ['reminder', 'Reminder']]}
+                  />
+                  <p className="sms-auto">Sent automatically. The stylist does not write or send this text.</p>
                   <div className="sms-phone">
                     <header className="sms-phone__top">
-                      <span className="sms-phone__avatar" aria-hidden="true">L</span>
-                      <div>
+                      <span className="sms-back" aria-hidden="true">‹</span>
+                      <div className="sms-phone__identity">
+                        <span className="sms-phone__avatar" aria-hidden="true">L</span>
                         <p>Lumen & Co.</p>
-                        <span>Text Message</span>
+                        <span className="sms-phone__kind">SMS</span>
                       </div>
                     </header>
                     <div className="sms-thread" aria-live="polite">
-                      <p className="sms-time">{phrase}</p>
+                      <p className="sms-time">Today</p>
                       {messages.map((message) => (
                         <p key={`${message.from}-${message.text}`} className={`sms-bubble sms-bubble--${message.from}`}>
                           {message.text}
-                          {message.manage ? (
-                            <button type="button" className="sms-link" onClick={() => openCustomer('manage')}>
-                              Manage appointment
-                            </button>
+                          {message.actions ? (
+                            <span className="sms-links">
+                              {canConfirm ? (
+                                <button type="button" onClick={confirmFromMessage}>Confirm Appointment</button>
+                              ) : null}
+                              <button type="button" onClick={() => openCustomer('manage')}>Manage Appointment</button>
+                            </span>
                           ) : null}
                         </p>
                       ))}
                     </div>
                     <form className="sms-composer" onSubmit={sendDraft}>
-                      <button type="button" className="sms-chip" onClick={confirmFromMessage} disabled={!canConfirm}>YES</button>
                       <input
                         aria-label="Text Message"
                         placeholder="Text Message"
                         value={draft}
-                        disabled={!canConfirm}
                         onChange={(event) => setDraft(event.target.value)}
                       />
-                      <button type="submit" aria-label="Send" disabled={!canConfirm}>Send</button>
+                      <button type="submit" aria-label="Send" disabled={!draft.trim()}>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12 19V6M6 12l6-6 6 6" />
+                        </svg>
+                      </button>
                     </form>
                   </div>
                 </>

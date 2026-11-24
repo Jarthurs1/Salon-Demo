@@ -550,99 +550,137 @@
   text-transform: uppercase;
 }
 
+.sms-auto {
+  margin: 0.15rem 0 0.35rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
 .sms-phone {
-  width: min(100%, 24rem);
+  width: min(100%, 28rem);
   margin: 0;
   overflow: hidden;
-  border: 1px solid #d7d7dc;
-  border-radius: 1.6rem;
+  border: 1px solid #e5e5ea;
+  border-radius: 0.85rem;
   background: #fff;
   color: #1c1c1e;
-  box-shadow: 0 12px 28px rgba(44, 36, 34, 0.08);
 }
 
 .sms-phone__top {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr) 1.4rem;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.7rem 0.85rem;
+  padding: 0.4rem 0.55rem 0.45rem;
   border-bottom: 1px solid #e5e5ea;
-  background: rgba(249, 249, 251, 0.94);
+  background: #f7f7f8;
+}
+
+.sms-back {
+  color: #007aff;
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.sms-phone__identity {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  gap: 0.05rem;
 }
 
 .sms-phone__avatar {
   display: grid;
   place-items: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 1.7rem;
+  height: 1.7rem;
   border-radius: 50%;
   background: #c7c7cc;
   color: #fff;
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .sms-phone__top p {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 700;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sms-phone__top span {
+.sms-phone__kind {
   color: #8e8e93;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
+  line-height: 1.1;
 }
 
 .sms-thread {
   display: grid;
   align-content: start;
-  gap: 0.4rem;
-  padding: 0.75rem 0.7rem 0.9rem;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 0.55rem 0.65rem 0.7rem;
   background: #fff;
 }
 
 .sms-time {
-  margin: 0.15rem 0 0.25rem;
+  margin: 0.05rem 0 0.1rem;
   color: #8e8e93;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
+  font-weight: 500;
   text-align: center;
 }
 
 .sms-bubble {
   width: fit-content;
-  max-width: 78%;
+  max-width: min(82%, 18.5rem);
   margin: 0;
-  padding: 0.45rem 0.7rem;
+  padding: 0.42rem 0.68rem;
+  overflow-wrap: break-word;
   border-radius: 1.05rem;
-  line-height: 1.35;
   font-size: 0.92rem;
+  line-height: 1.32;
 }
 
 .sms-bubble--salon {
   justify-self: start;
   background: #e9e9eb;
   color: #1c1c1e;
-  border-bottom-left-radius: 0.3rem;
+  border-bottom-left-radius: 0.28rem;
 }
 
 .sms-bubble--customer {
   justify-self: end;
   background: #34c759;
   color: #fff;
-  border-bottom-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.28rem;
 }
 
-.sms-link {
-  display: block;
-  margin-top: 0.35rem;
+.sms-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.75rem;
+  margin-top: 0.28rem;
+}
+
+.sms-links button {
+  min-height: 1.7rem;
   padding: 0;
   border: 0;
   background: transparent;
   color: #007aff;
   font: inherit;
-  font-weight: 700;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.2;
   text-align: left;
   text-decoration: underline;
+  text-underline-offset: 2px;
   cursor: pointer;
 }
 
@@ -650,7 +688,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.55rem 0.6rem calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  padding: 0.4rem 0.5rem 0.5rem;
   border-top: 1px solid #e5e5ea;
   background: #f7f7f8;
 }
@@ -658,34 +696,42 @@
 .sms-composer input {
   flex: 1 1 auto;
   min-width: 0;
-  min-height: 2.2rem;
-  padding: 0.35rem 0.75rem;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
   border: 1px solid #d1d1d6;
   border-radius: 999px;
   background: #fff;
   color: #1c1c1e;
   font: inherit;
+  font-size: 0.92rem;
 }
 
-.sms-chip,
 .sms-composer button[type='submit'] {
+  display: grid;
   flex: none;
-  min-height: 2.2rem;
-  padding: 0.25rem 0.7rem;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   background: #34c759;
   color: #fff;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 700;
   cursor: pointer;
 }
 
-.sms-chip:disabled,
-.sms-composer button:disabled,
-.sms-composer input:disabled {
-  opacity: 0.45;
+.sms-composer button[type='submit'] svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.sms-composer button:disabled {
+  background: #c7c7cc;
   cursor: default;
 }
 
